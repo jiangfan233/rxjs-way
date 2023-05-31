@@ -18,6 +18,7 @@ if (isGithubActions) {
 const nextConfig = {
   distDir: "docs",
   reactStrictMode: false,
+  output: "export"
 }
 
 module.exports = nextConfig
