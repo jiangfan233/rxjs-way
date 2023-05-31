@@ -19,10 +19,15 @@
 * {
   padding: 0;
   margin: 0;
-  box-sizing: content-box;
 }
 
 body {
   min-width: 100vw;
   min-height: 100vh;
+  overflow-x: hidden;
 }
+
+.language-javascript {
+  background-color: #f7f7f0 !important;
+}
+

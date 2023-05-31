@@ -1,66 +1,49 @@
-"use client"
+"use client";
 
 import { useState } from "react";
 import { Header } from "./header";
 import { Sider } from "./sider";
+import { FileStructure } from "../../../../lib/post";
 
 
-const menuArray = [
-    {
-        label: "this is 1",
-        path: "1",
-        children: [
-            {
-                label: "1-1",
-                path: "1-1"
-            },
-            {
-                label: "1-2",
-                path: "1-2"
-            },
-        ]
-    },
-    {
-        label: "this is 2",
-        path: "2",
-        children: [
-            {
-                label: "2-1",
-                path: "2-1"
-            },
-            {
-                label: "2-2",
-                path: "2-2"
-            },
-        ]
-    }
-]
 
 
 interface LayoutProps {
-    children: React.ReactNode;
+  children: React.ReactNode;
+  menuArray: FileStructure[];
 }
 
-export const Layout: React.FC<LayoutProps> = ({ children }) => {
-    const [isShowMenu, toggleMenu] = useState(false);
+export const Layout: React.FC<LayoutProps> = ({ children, menuArray }) => {
+  const [isShowMenu, toggleMenu] = useState(false);
 
-    return <div className="
+  return (
+    <div
+      className="
         flex
         items-start
-        justify-between
-    ">
-        <Sider menuArray={menuArray} isShowMenu={isShowMenu} />
-        <div className="
+        justify-start
+        p-1
+        overflow-y-hidden
+        w-full
+        xs:p-2
+    "
+    >
+      <Sider
+        menuArray={menuArray}
+        toggleMenu={toggleMenu}
+        isShowMenu={isShowMenu}
+      />
+      <div
+        className="
+            w-full
             flex-col 
             items-center 
             justify-start
-            w-screen
-            md:w-10/12
-        ">
-            <Header isShowMenu={isShowMenu} toggleMenu={toggleMenu} />
-            <div className="">
-                { children }
-            </div>
-        </div>
+        "
+      >
+        <Header />
+        <div className="p-4 w-full flex flex-col items-center">{children}</div>
+      </div>
     </div>
-}
+  );
+};
