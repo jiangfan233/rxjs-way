@@ -1,11 +1,9 @@
 "use client";
 
-import { useState } from "react";
+
 import { Header } from "./header";
 import { Sider } from "./sider";
 import { FileStructure } from "../../../../lib/post";
-
-
 
 
 interface LayoutProps {
@@ -14,7 +12,6 @@ interface LayoutProps {
 }
 
 export const Layout: React.FC<LayoutProps> = ({ children, menuArray }) => {
-  const [isShowMenu, toggleMenu] = useState(false);
 
   return (
     <div
@@ -30,8 +27,6 @@ export const Layout: React.FC<LayoutProps> = ({ children, menuArray }) => {
     >
       <Sider
         menuArray={menuArray}
-        toggleMenu={toggleMenu}
-        isShowMenu={isShowMenu}
       />
       <div
         className="

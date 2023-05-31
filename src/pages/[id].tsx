@@ -11,10 +11,10 @@ const check = (structure: FileStructure[]) => {
   while (queue.length) {
     const item = queue.shift()!;
 
-    const { id, children } = item;
+    const { id, subMenus } = item;
 
-    if (!Array.isArray(children)) result.push({ params: { id } });
-    else queue.push(...children);
+    if (!Array.isArray(subMenus)) result.push({ params: { id } });
+    else queue.push(...subMenus);
   }
   return result;
 };

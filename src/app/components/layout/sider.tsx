@@ -1,27 +1,27 @@
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import { AiOutlineBars } from "react-icons/ai";
 import { FileStructure } from "../../../../lib/post";
 
 type MenuItemProps = FileStructure;
 
-const MenuItem = ({ label, id: path, children }: MenuItemProps) => (
+const MenuItem = ({ label, id: path, subMenus }: MenuItemProps) => (
   <>
     <li className="mx-4">
       <Link href={path}>{label}</Link>
-      {children ? (
+      {subMenus ? (
         <ol className="list-disc">
-          {children.map(
+          {subMenus.map(
             ({
               label: childLabel,
               id: childPath,
-              children: childChildren,
+              subMenus: childChildren,
             }) => (
               <MenuItem
-                key={path}
+                key={path + childLabel}
                 label={childLabel}
                 id={childPath}
-                children={childChildren}
+                subMenus={childChildren}
               />
             )
           )}
@@ -33,20 +33,19 @@ const MenuItem = ({ label, id: path, children }: MenuItemProps) => (
 
 interface SiderProps {
   menuArray: MenuItemProps[];
-  isShowMenu: boolean;
-  toggleMenu: Function;
 }
 
 export const Sider: React.FC<SiderProps> = ({
   menuArray,
-  isShowMenu,
-  toggleMenu,
 }) => {
+
+  const [isShowMenu, toggleMenu] = useState(false);
+
   return (
     <div
       className={
         (isShowMenu
-          ? "fixed min-w-4/5 z-10 bg-slate-300 xs:relative xs:min-w-1/4 md:min-w-1/5 xs:max-w-xs"
+          ? "fixed min-w-4/5 z-10 bg-slate-300 xs:relative xs:min-w-1/4 xs:max-w-xs"
           : "") + " z-10 flex items-start justify-start"
       }
     >
@@ -57,12 +56,12 @@ export const Sider: React.FC<SiderProps> = ({
             " relative list-disc xs:min-w-1/4 py-1 h-[96vh]"
           }
         >
-          {menuArray.map(({ label, id, children }) => (
+          {menuArray && menuArray.map(({ label, id, subMenus }) => (
             <MenuItem
-              key={id}
+              key={id + label}
               label={label}
               id={id}
-              children={children}
+              subMenus={subMenus}
             />
           ))}
         </ol>

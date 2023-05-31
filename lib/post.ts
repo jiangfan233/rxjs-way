@@ -45,7 +45,7 @@ const DOMPurify = createDOMPurify(window);
 export interface FileStructure {
   id: string;
   label: string;
-  children?: FileStructure[] | null;
+  subMenus?: FileStructure[] | null;
 }
 
 // 递归获取目录解构
@@ -59,13 +59,13 @@ export function getDirStructure(
     const menu = {
       id: Buffer.from(filePath, "utf8").toString("base64"),
       label: stat.isDirectory() ? file : fileName,
-      children: stat.isDirectory() ? getDirStructure(filePath) : null,
+      subMenus: stat.isDirectory() ? getDirStructure(filePath) : null,
     };
 
     // 把文件夹的 id 修改为 文件夹下 index.md 的 id
     if(stat.isDirectory()) {
-      const { children } = menu;
-      const ind = children?.find(item => item.label.includes("index"))
+      const { subMenus } = menu;
+      const ind = subMenus?.find(item => item.label.includes("index"))
       if(ind) menu.id = ind.id;
     }
 
