@@ -27,7 +27,8 @@ body {
   overflow-x: hidden;
 }
 
-.language-javascript {
-  background-color: #f7f7f0 !important;
+.markdown-body {
+  box-sizing: border-box;
+  margin: 0 auto;
 }
 

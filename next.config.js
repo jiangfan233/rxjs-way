@@ -2,6 +2,7 @@
 
 // const repo = "https://jiangfan233.github.io/rxjs-way";
 const isGithubActions = process.env.GITHUB_ACTIONS || false
+const isProd = process.env.NODE_ENV === "production";
 
 let assetPrefix = ''
 let basePath = '/'
@@ -18,7 +19,7 @@ if (isGithubActions) {
 const nextConfig = {
   distDir: "docs",
   reactStrictMode: false,
-  output: "export"
+  output: isProd ? "export" : "standalone",
 }
 
 module.exports = nextConfig

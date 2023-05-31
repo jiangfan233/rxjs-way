@@ -38,7 +38,7 @@ export const getStaticProps = ({ params }: { params: { id: string } }) => {
 export default function Page({ content, ...rest }: FileContent) {
   return (
     <>
-      <div className="w-full" dangerouslySetInnerHTML={{ __html: content }} />
+      <div className="w-full markdown-body" dangerouslySetInnerHTML={{ __html: content }} />
     </>
   );
 }
