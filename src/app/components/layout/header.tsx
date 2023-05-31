@@ -7,7 +7,7 @@ export const Header = React.memo(() => {
       <div className="w-full flex gap-4 items-center justify-center relative h-8">
         <h2 className="font-bold text-3xl">The Rxjs Way</h2>
 
-        <a href="https://github.com/jiangfan233/learn-rxjs" target="_blank">
+        <a href="https://github.com/jiangfan233/rxjs-way" target="_blank">
           <AiOutlineGithub size={"2rem"} />
         </a>
       </div>

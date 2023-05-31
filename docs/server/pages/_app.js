@@ -46,7 +46,7 @@ const Header = /*#__PURE__*/ external_react_default().memo(()=>{
                     children: "The Rxjs Way"
                 }),
                 /*#__PURE__*/ jsx_runtime.jsx("a", {
-                    href: "https://github.com/jiangfan233/learn-rxjs",
+                    href: "https://github.com/jiangfan233/rxjs-way",
                     target: "_blank",
                     children: /*#__PURE__*/ jsx_runtime.jsx(ai_namespaceObject.AiOutlineGithub, {
                         size: "2rem"
