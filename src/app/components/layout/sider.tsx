@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { AiOutlineBars } from "react-icons/ai";
 import { FileStructure } from "../../../../lib/post";
-import { Global } from "../../../../lib/Global";
 
 type MenuItemProps = FileStructure;
 
