@@ -13,7 +13,7 @@ function MyApp({ Component, pageProps }: { Component: any; pageProps: any }) {
   return (
     <>
       <Head>
-
+        <title>The Rxjs Way</title>
       </Head>
       <ClientOnly>
         <Layout menuArray={menuArray}>

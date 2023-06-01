@@ -1,7 +1,6 @@
 import path from "path";
 import matter from "gray-matter";
 import fs from "fs";
-import { Buffer } from "buffer";
 import { JSDOM } from "jsdom";
 import createDOMPurify from "dompurify";
 
@@ -49,17 +48,22 @@ export interface FileStructure {
 }
 
 // 递归获取目录解构
-export function getDirStructure(
-  dirPath: string = path.join(process.cwd(), "posts")
-): FileStructure[] {
+export const getDirStructure = (
+  dirName = ""
+  ): FileStructure[] => {
+  const dirPath: string = path.join(process.cwd(), "posts", dirName.replaceAll(/&nbsp;/g, "/"));
   const res =  fs.readdirSync(dirPath).map((file) => {
+
     const filePath = path.join(dirPath, file);
     const stat = fs.lstatSync(filePath);
     const fileName = file.slice(0, file.lastIndexOf("."));
+
+    const isDir = stat.isDirectory();
+
     const menu = {
-      id: Buffer.from(filePath, "utf8").toString("base64"),
-      label: stat.isDirectory() ? file : fileName,
-      subMenus: stat.isDirectory() ? getDirStructure(filePath) : null,
+      id: encodeURIComponent(`${dirName}/${fileName}`),
+      label: isDir ? file : fileName,
+      subMenus: isDir ? getDirStructure(`${dirName}/${file}`) : null,
     };
 
     // 把文件夹的 id 修改为 文件夹下 index.md 的 id
@@ -68,10 +72,8 @@ export function getDirStructure(
       const ind = subMenus?.find(item => item.label.includes("index"))
       if(ind) menu.id = ind.id;
     }
-
     return menu;
   });
-
   return res;
 }
 
@@ -83,7 +85,7 @@ export interface FileContent {
 
 // 根据文件路径获取并解析markdown文件内容
 export const getFileContent = (filePath: string): FileContent | null => {
-  const fPath = Buffer.from(filePath, "base64").toString("utf8");
+  const fPath = path.join(process.cwd(), "posts", `${decodeURIComponent(filePath)}.md`);
   if (!fs.existsSync(fPath)) {
     return null;
   }

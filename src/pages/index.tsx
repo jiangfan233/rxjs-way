@@ -1,8 +1,8 @@
 "use client";
-import { getDirStructure, FileStructure } from "../../lib/post";
+import { FileStructure, getDirStructure } from "../../lib/post";
 
 
-export async function getStaticProps() {
+export function getStaticProps() {
   const menuArray = getDirStructure();
   return {
     props: {
@@ -16,7 +16,7 @@ interface HomeProps {
   menuArray: FileStructure[]
 }
 
-export default function Home({ menuArray }: HomeProps) {
+export default function Home({ menuArray}: HomeProps) {
   
   return (
     <div>Hello</div>

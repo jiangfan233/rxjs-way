@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { AiOutlineBars } from "react-icons/ai";
 import { FileStructure } from "../../../../lib/post";
+import { Global } from "../../../../lib/Global";
 
 type MenuItemProps = FileStructure;
 
@@ -38,22 +39,22 @@ interface SiderProps {
 export const Sider: React.FC<SiderProps> = ({
   menuArray,
 }) => {
-
-  const [isShowMenu, toggleMenu] = useState(false);
+ 
+  const [isShowMenu, toggleMenu] = useState(true);
 
   return (
     <div
       className={
         (isShowMenu
-          ? "fixed min-w-4/5 z-10 bg-slate-300 xs:relative xs:min-w-1/4 xs:max-w-xs"
-          : "") + " z-10 flex items-start justify-start"
+          ? "fixed min-w-4/5 z-10 xs:relative xs:min-w-1/4 xs:max-w-xs"
+          : "") + " z-10 flex bg-[#14191f] text-slate-50 items-start justify-start"
       }
     >
       <div className="relative w-full">
         <ol
           className={
-            (isShowMenu ? "" : "w-0 -z-10 invisible") +
-            " relative list-disc xs:min-w-1/4 py-1 h-[96vh]"
+            (isShowMenu ? "" : "w-0 px-0 -z-10 invisible") +
+            " relative list-disc xs:min-w-1/4 p-3 h-[96vh]"
           }
         >
           {menuArray && menuArray.map(({ label, id, subMenus }) => (
@@ -66,7 +67,8 @@ export const Sider: React.FC<SiderProps> = ({
           ))}
         </ol>
         <AiOutlineBars
-          className="absolute top-0 left-full cursor-pointer z-10 h-8 ml-4"
+          size={"1.5rem"}
+          className="absolute top-0 text-black left-full cursor-pointer z-10 h-8 ml-4"
           onClick={() => toggleMenu(!isShowMenu)}
         />
       </div>
