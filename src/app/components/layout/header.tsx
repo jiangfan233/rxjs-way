@@ -1,5 +1,5 @@
 import React from "react";
-import { AiOutlineGithub } from "react-icons/ai"
+import { AiOutlineGithub, AiOutlineEdit } from "react-icons/ai"
 
 export const Header = React.memo(() => {
   return (
@@ -9,6 +9,9 @@ export const Header = React.memo(() => {
 
         <a href="https://github.com/jiangfan233/rxjs-way" target="_blank">
           <AiOutlineGithub size={"2rem"} />
+        </a>
+        <a href="https://boiling-truffle-5db.notion.site/interview-98afc8fc8b2c491ba62ed16258f99ca0" target="_blank">
+          <AiOutlineEdit size={"2rem"} />
         </a>
       </div>
     </>
