@@ -37,3 +37,11 @@ body::-webkit-scrollbar {
   padding: 1rem;
 }
 
+.markdown-body ul {
+  list-style: disc;
+}
+
+.markdown-body blockquote {
+  font-size: 1.2rem;
+}
+
