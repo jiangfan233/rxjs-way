@@ -34,5 +34,6 @@ body::-webkit-scrollbar {
 .markdown-body {
   box-sizing: border-box;
   margin: 0 auto;
+  padding: 1rem;
 }
 
