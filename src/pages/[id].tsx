@@ -29,7 +29,9 @@ export const getStaticPaths: GetStaticPaths = () => {
 
 export const getStaticProps = ({ params }: { params: { id: string } }) => {
   const { id } = params;
-  const { content, ...rest } = getFileContent(id)!;
+  const data = getFileContent(id);
+  if(!data) return { props: {} } 
+  const { content, ...rest } = data;
   const menuArray = getDirStructure();
 
   return { props: { content, menuArray, ...rest } };
@@ -38,7 +40,7 @@ export const getStaticProps = ({ params }: { params: { id: string } }) => {
 export default function Page({ content, ...rest }: FileContent) {
   return (
     <>
-      <div className="w-full markdown-body" dangerouslySetInnerHTML={{ __html: content }} />
+      { content ? <div className="w-full markdown-body" dangerouslySetInnerHTML={{ __html: content }} /> : null}
     </>
   );
 }
