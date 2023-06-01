@@ -51,7 +51,7 @@ export interface FileStructure {
 export const getDirStructure = (
   dirName = ""
   ): FileStructure[] => {
-  const dirPath: string = path.join(process.cwd(), "posts", dirName.replaceAll(/&nbsp;/g, "/"));
+  const dirPath: string = path.join(process.cwd(), "posts", dirName);
   const res =  fs.readdirSync(dirPath).map((file) => {
 
     const filePath = path.join(dirPath, file);
