@@ -67,7 +67,7 @@ export const Sider: React.FC<SiderProps> = ({
         </ol>
         <AiOutlineBars
           size={"1.5rem"}
-          className="absolute top-0 text-black left-full cursor-pointer z-10 h-8 ml-4"
+          className="absolute top-0 box-content bg-gray-100 text-black left-full cursor-pointer z-10 h-8 pl-6 pr-4"
           onClick={() => toggleMenu(!isShowMenu)}
         />
       </div>
