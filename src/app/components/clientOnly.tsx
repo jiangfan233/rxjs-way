@@ -4,8 +4,11 @@ interface ClientOnlyProps {
     children: React.ReactNode;
 }
 
-export const ClientOnly: React.FC<ClientOnlyProps> = ({ children }) => {
+// warnning：shadow compare
+export const ClientOnly: React.FC<ClientOnlyProps> = React.memo(({ children }) => {
     return <>
         {children ? children : null}
     </>
-}
+})
+
+ClientOnly.displayName = "ClientOnly";

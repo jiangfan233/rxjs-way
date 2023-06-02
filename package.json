@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "local-build": "npx --no-install next build"
   },
   "dependencies": {
     "@types/node": "20.2.5",

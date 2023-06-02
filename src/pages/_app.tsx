@@ -1,24 +1,30 @@
 // import App from 'next/app'
 
 import { ClientOnly } from "@/app/components/clientOnly";
-import { Layout } from "@/app/components/layout";
 import Head from "next/head";
 import React from "react";
-import "../app/globals.css";
+import "@/app/globals.css";
 import "github-markdown-css/github-markdown-light.css";
 import "highlight.js/styles/github.css";
 
-function MyApp({ Component, pageProps }: { Component: any; pageProps: any }) { 
-  const { menuArray } = pageProps;
+const MemoHead = React.memo(() => {
+  return (
+    <Head>
+      <title>The Rxjs Way</title>
+    </Head>
+  );
+});
+
+MemoHead.displayName = "MemoHead";
+
+function MyApp({ Component, pageProps }: { Component: any; pageProps: any }) {
   return (
     <>
-      <Head>
-        <title>The Rxjs Way</title>
-      </Head>
+      <MemoHead />
       <ClientOnly>
-        <Layout menuArray={menuArray}>
-          <Component {...pageProps} />
-        </Layout>
+        <Component {...pageProps} />
+        {/* <Layout>
+          </Layout> */}
       </ClientOnly>
     </>
   );

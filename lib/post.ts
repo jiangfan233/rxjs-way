@@ -1,6 +1,7 @@
 import path from "path";
 import matter from "gray-matter";
 import fs from "fs";
+import * as fsp from "fs/promises";
 import { Buffer } from "buffer";
 import { JSDOM } from "jsdom";
 import createDOMPurify from "dompurify";
@@ -75,6 +76,17 @@ export function getDirStructure(
   return res;
 }
 
+export function memoResult(fn: Function = getDirStructure, ...args: any[]) {
+  let res: any = undefined;
+  return () => {
+    if(!res) {
+      console.log("memoResult")
+      res = fn.apply(null, args);
+    }
+    return res;
+  };
+}
+
 export interface FileContent {
   content: string;
   title: string;
@@ -82,12 +94,12 @@ export interface FileContent {
 }
 
 // 根据文件路径获取并解析markdown文件内容
-export const getFileContent = (filePath: string): FileContent | null => {
+export const getFileContent = async(filePath: string) => {
   const fPath = Buffer.from(filePath, "base64").toString("utf8");
-  if (!fs.existsSync(fPath)) {
+  if (! fs.existsSync(fPath)) {
     return null;
   }
-  const fileContent = fs.readFileSync(fPath, "utf-8");
+  const fileContent = await fsp.readFile(fPath, "utf-8");
   const matterResult = matter(fileContent);
   const content = DOMPurify.sanitize(md.render(matterResult.content));
   return {
