@@ -4,7 +4,6 @@ import React, { useMemo } from "react";
 import { Sider } from "@/app/components/layout/sider";
 import { Header } from "@/app/components/layout/header";
 
-export const cache = new Map();
 
 const check = (structure: FileStructure[]) => {
   if (!structure || structure.length === 0) return [];
@@ -22,22 +21,27 @@ const check = (structure: FileStructure[]) => {
 };
 
 export const getStaticPaths: GetStaticPaths = () => {
-  const structure = cache.get("menuArray");
   return {
-    paths: check(structure),
+    paths: check(getDirStructure()),
     fallback: true, // false or "blocking"
   };
 };
 
-export const getStaticProps = async({ params }: { params: { id: string } }) => {
+export const getStaticProps = ({ params }: { params: { id: string } }) => {
   const { id } = params;
-  const data = await getFileContent(id);
+  const data = getFileContent(id);
   if (!data) return { props: {} };
   const { content, ...rest } = data;
 
-  if(!cache.has("manuArray")) cache.set("menuArray", getDirStructure());
-
-  return { props: { content, menuArray: cache.get("menuArray") }, revalidate: 60 };
+  return {
+    props: {
+      content,
+      menuArray: getDirStructure(),
+    },
+    // 每当有用户访问这个页面时，Next.js 会先从缓存中读取已经生成的页面，
+    // 然后检查页面是否过期，如果过期了，则会在后台重新生成页面，并将新页面缓存起来，以供下一次访问时使用。
+    // revalidate: 60,
+  };
 };
 
 interface PageProps {
@@ -45,22 +49,21 @@ interface PageProps {
   menuArray: FileStructure[];
 }
 
-const Page = React.memo(({ content, menuArray }: PageProps) => {
-  console.log("Page rendered");
+const Page = React.memo(
+  ({ content, menuArray }: PageProps) => {
+    const memoContent = useMemo(() => {
+      return content ? (
+        <div
+          className="w-full markdown-body"
+          dangerouslySetInnerHTML={{ __html: content }}
+        />
+      ) : null;
+    }, [content]);
 
-  const memoContent = useMemo(() => {
-    return content ? (
-      <div
-        className="w-full markdown-body"
-        dangerouslySetInnerHTML={{ __html: content }}
-      />
-    ) : null;
-  }, [content]);
-
-  return (
-    <>
-      <div
-        className="
+    return (
+      <>
+        <div
+          className="
         flex
         items-start
         justify-start
@@ -69,37 +72,37 @@ const Page = React.memo(({ content, menuArray }: PageProps) => {
         w-full
         xs:p-2
     "
-      >
-        <Sider menuArray={menuArray} />
-        <div
-          className="
+        >
+          <Sider menuArray={menuArray} />
+          <div
+            className="
             w-full
             flex-col 
             items-center 
             justify-start
         "
-        >
-          <Header />
-          <div className="p-4 w-full flex flex-col items-center">
-            {memoContent}
+          >
+            <Header />
+            <div className="p-4 w-full flex flex-col items-center">
+              {memoContent}
+            </div>
           </div>
         </div>
-      </div>
-    </>
-  );
-}, (prev, curr) => {
-  const {content, menuArray} = prev;
-  const {content: currContent, menuArray: currMenuArray} = curr;
-  if(content !== currContent) {
-    console.log("content diff");
-    return false;
+      </>
+    );
+  },
+  (prev, curr) => {
+    const { content, menuArray } = prev;
+    const { content: currContent, menuArray: currMenuArray } = curr;
+    if (content !== currContent) {
+      return false;
+    }
+    if (menuArray.length !== currMenuArray.length) {
+      return false;
+    }
+    return true;
   }
-  if(menuArray !== currMenuArray) {
-    console.log("menuArray diff");
-    return false;
-  }
-  return true;
-});
+);
 
 Page.displayName = "Page";
 
