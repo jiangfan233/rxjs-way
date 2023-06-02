@@ -34,7 +34,7 @@
 - Utilized Webpack and PWA (Progressive Web App) features.
 
 #### Skills
-Vue, JS, React, RxJS, Next.js, functional programming, AngularJS
+Vue, JS, React, RxJS, Next.js, Functional Programming, AngularJS, JWT, Express, Docker, MySQL, Linux, TAPD, GIT, CICD
 
 #### Interests
 Running, coding, and reading.

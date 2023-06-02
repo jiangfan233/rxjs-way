@@ -42,7 +42,7 @@
 - ⽀持离线运行(pwa)、数据本地存储(localStorage);
   
 >#### 其他
-**技能**： vue，js，react，rxjs，nextjs，函数式编程，angularjs
+**技能**：Vue, JS, React, RxJS, Next.js, Functional Programming, AngularJS, JWT, Express, Docker, MySQL, Linux, TAPD, GIT, CICD
 **兴趣爱好**： 跑步、码代码、看书
 
 >#### 工作经历
