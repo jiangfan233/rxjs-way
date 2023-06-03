@@ -4,7 +4,6 @@ import React, { useMemo } from "react";
 import { Sider } from "@/app/components/layout/sider";
 import { Header } from "@/app/components/layout/header";
 
-
 const check = (structure: FileStructure[]) => {
   if (!structure || structure.length === 0) return [];
   let result: { params: { id: string } }[] = [];
@@ -51,6 +50,7 @@ interface PageProps {
 
 const Page = React.memo(
   ({ content, menuArray }: PageProps) => {
+
     const memoContent = useMemo(() => {
       return content ? (
         <div
@@ -64,14 +64,14 @@ const Page = React.memo(
       <>
         <div
           className="
-        flex
-        items-start
-        justify-start
-        p-1
-        overflow-y-hidden
-        w-full
-        xs:p-2
-    "
+            flex
+            items-start
+            justify-start
+            p-1
+            overflow-y-hidden
+            w-full
+            xs:p-2
+          "
         >
           <Sider menuArray={menuArray} />
           <div
@@ -80,8 +80,7 @@ const Page = React.memo(
             flex-col 
             items-center 
             justify-start
-        "
-          >
+          ">
             <Header />
             <div className="p-4 w-full flex flex-col items-center">
               {memoContent}
@@ -97,6 +96,9 @@ const Page = React.memo(
     if (content !== currContent) {
       return false;
     }
+
+    // 目前网站托管在静态服务器，menuArray不会频繁更新
+    // 但是 getStaticProps 运行在build阶段，无法缓存结果，每次都会返回一个新的 menuArray 对象
     if (menuArray.length !== currMenuArray.length) {
       return false;
     }
