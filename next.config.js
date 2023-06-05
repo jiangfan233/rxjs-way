@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 
 // const repo = "https://jiangfan233.github.io/rxjs-way";
-// const isGithubActions = process.env.GITHUB_ACTIONS || false;
+const isGithubActions = process.env.GITHUB_ACTIONS || false;
 const isProd = process.env.NODE_ENV === "production";
 
 let assetPrefix = "";
@@ -19,8 +19,8 @@ const nextConfig = {
   distDir: "docs",
   reactStrictMode: false,
   output: isProd ? "export" : "standalone",
-  assetPrefix,
-  basePath
+  assetPrefix: assetPrefix,
+  basePath: basePath,
 };
 
 module.exports = nextConfig;
