@@ -26,13 +26,6 @@
 - 负责开发lancer-ui组件库、小程序通用组件，结合网站风格、设计师理念，根据- 所有设计图抽象出一套通用组件库，利用框架特性、html原生api实现同一组件不同页面显示效果；
 - 在组件库中编写rollup 自定义插件实现修改less文件后自动编译。
 
-**[个人项目](https://github.com/jiangfan233)**  <span style="float: right;">2023年01月 - 至今</span>
-- 出于兴趣，探索各种编程框架。
-- 项目中涉及到了nextjs、CICD、angularjs、rxjs、函数式编程等；
-- 探索angularjs + webpack + typescript 编程方式，发现由于angularjs内部依靠特殊字符串实现依赖注入而无法被typescript约束类型，这也正是Angular2.0依靠typescript中装饰器的原因。
-- 探索rxjs函数响应式编程，数据流(Observable)是一种在未来时间点吐出数据的时序数据库。rxjs通过各种操作符来实现对数据流的建模、操作。
-- 尝试在github中部署nextjs，以记录rxjs、函数式编程等方面的学习历程；目前已经利用github Actions 实现自动化部署；
-  
 **[俄罗斯方块](https://jiangfan233.github.io/tetris/)**(个人项目)<span style="float: right;">2023.01 ~ 2023.02</span>
 - 利用React.memo（自定义比较函数）、useCallback、useMemo 提高性能。
 - 利用redux管理全局状态；利用 immer 实现 immutable 编程范式；利用typescript约束变量类型；
@@ -40,6 +33,13 @@
 - 利⽤normalize.css、tailwindcss、rem、js实现移动端适配；
 - 利⽤webpack打包上线，压缩js、css、图⽚等使打包体积最⼩化；
 - ⽀持离线运行(pwa)、数据本地存储(localStorage);
+
+**[个人项目](https://github.com/jiangfan233)**  <span style="float: right;">2023年01月 - 至今</span>
+- 出于兴趣，探索各种编程框架。
+- 项目中涉及到了nextjs、CICD、angularjs、rxjs、函数式编程等；
+- 探索angularjs + webpack + typescript 编程方式，发现由于angularjs内部依靠特殊字符串实现依赖注入而无法被typescript约束类型，这也正是Angular2.0依靠typescript中装饰器的原因。
+- 探索rxjs函数响应式编程，数据流(Observable)是一种在未来时间点吐出数据的时序数据库。rxjs通过各种操作符来实现对数据流的建模、操作。
+- 尝试在github中部署nextjs，以记录rxjs、函数式编程等方面的学习历程；目前已经利用github Actions 实现自动化部署；
   
 >#### 其他
 **技能**：Vue, JS, React, RxJS, Next.js, Functional Programming, AngularJS, JWT, Express, Docker, MySQL, Linux, TAPD, GIT, CICD

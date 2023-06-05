@@ -80,6 +80,8 @@ const Page = React.memo(
             flex-col 
             items-center 
             justify-start
+            md:w-[70%]
+            md:mx-auto
           ">
             <Header />
             <div className="p-4 w-full flex flex-col items-center">

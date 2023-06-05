@@ -37,6 +37,12 @@ body::-webkit-scrollbar {
   padding: 1rem;
 }
 
+@media(min-width: 768px) {
+  .markdown-body {
+    background-color: rgba(242, 240, 237, .4) !important;
+  }
+}
+
 .markdown-body ul {
   list-style: disc;
 }
