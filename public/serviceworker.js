@@ -1,6 +1,6 @@
 const VERSION = "pwa";
 
-const installFilesEssential = ["../public/manifest.json", "../public/logo.png"];
+const installFilesEssential = ["./manifest.json", "./logo.png"];
 
 self.addEventListener("install", (e) => {
   console.log('[Service Worker] Install');
@@ -8,6 +8,7 @@ self.addEventListener("install", (e) => {
     const cache = await caches.open(VERSION);
     console.log('[Service Worker] Caching all: app shell and content');
     await cache.addAll(installFilesEssential);
+    
   })());
 });
 
@@ -21,16 +22,15 @@ self.addEventListener("activate", (e) => {
           .filter((key) => key !== VERSION)
           .forEach((key) => caches.delete(key))
       )
-      // ？？？ 这里是什么意思？
+      // Be aware that this results in your service worker controlling pages 
+      //that loaded regularly over the network, 
+      // or possibly via a different service worker.
       .then(() => self.clients.claim())
   );
 });
 
 self.addEventListener("fetch", (e) => {
-  if(!e.clientId) {
-    console.log("no client");
-    return;
-  } 
+  
   if (e.request.method !== "GET") return;
 
   e.respondWith(
