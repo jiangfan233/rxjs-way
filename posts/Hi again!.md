@@ -19,7 +19,8 @@
 #### Project Experience
 **Rural Property Rights Trading Platform** <span style="float: right;">2022.04 - 2022.11</span>
 - Developed and maintained the product's web and mini-program front-end using front-end technologies such as HTML, CSS, JavaScript, jQuery, VUE, Axios, SSR, etc.
-- Implemented the canvas approval process diagram interface using closure and functional programming to achieve automatic and precise adjustment of node position and size- Developed the Lancer-UI component library and general-purpose components for the mini-program, abstracting a set of general-purpose component library based on all design concepts.
+- Implemented the canvas approval process diagram interface using closure and functional programming to achieve automatic and precise adjustment of node position and size.
+- Developed the Lancer-UI component library and general-purpose components for the mini-program, abstracting a set of general-purpose component library based on all design concepts.
 - Wrote a Rollup custom plugin in the component library to automatically compile less files after modification.
 
 **[Person Project](https://github.com/jiangfan233)**  <span style="float: right;">2023.01 - now</span>
@@ -29,7 +30,7 @@
 **[Tetris](https://jiangfan233.github.io/tetris/)**(Personal project)<span style="float: right;">2023.01 ~ 2023.02</span>
 - Utilized React.memo, useCallback, and useMemo to improve performance.
 - Utilized Redux, Immer, and TypeScript to manage global state and implement immutable programming paradigm.
-- Implemented keyboard and mouse movement controls, collision detection, collision, and failure sound effects.
+- Implemented keyboard and mouse movement controls, collision detection, and failure sound effects.
 - Utilized Normalize.css, Tailwind CSS, rem, and JavaScript to achieve mobile device adaptation.
 - Utilized Webpack and PWA (Progressive Web App) features.
 
