@@ -18,3 +18,5 @@ export const handleScreenResize = (callback: Function, ms: number, ...args: any[
 
   return () => {window.onresize = null};
 } 
+
+export const isProd = () => process.env.NODE_ENV === "production";

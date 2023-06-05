@@ -6,13 +6,14 @@ import React, { useEffect } from "react";
 import "@/app/globals.css";
 import "github-markdown-css/github-markdown-light.css";
 import "highlight.js/styles/github.css";
+import { isProd } from "@lib/utils";
 
 const MemoHead = React.memo(() => {
   return (
     <Head>
       <title>The Rxjs Way</title>
       <meta name="viewport" content="initial-scale=1.0, width=device-width" />
-      <link rel="manifest" href="/manifest.json" />
+      <link rel="manifest" href={ isProd() ? "./manifest.json" : "/manifest.json"} />
     </Head>
   );
 });
@@ -24,7 +25,7 @@ function MyApp({ Component, pageProps }: { Component: any; pageProps: any }) {
     // Registering Service Worker
     if ("serviceWorker" in navigator) {
       console.log("service worker registered");
-      navigator.serviceWorker.register("/serviceworker.js");
+      navigator.serviceWorker.register(isProd() ? "./serviceworker.js" : "/serviceworker.js");
     }
   }, []);
 
