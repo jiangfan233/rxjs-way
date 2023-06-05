@@ -8,8 +8,6 @@ const isProd = process.env.NODE_ENV === "production";
 if (isGithubActions) {
   // 去掉 `<owner>/`
   console.log("GITHUB_REPOSITORY: ", process.env.GITHUB_REPOSITORY);
-  assetPrefix = `/${repo}/`;
-  basePath = `/${repo}/`;
 }
 
 const nextConfig = {
