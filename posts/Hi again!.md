@@ -2,7 +2,7 @@
 [Email](lostwind233@outlook.com) | [Github](https://jiangfan233.github.io/rxjs-way/) | [Notion](https://boiling-truffle-5db.notion.site/interview-98afc8fc8b2c491ba62ed16258f99ca0)
 
 #### Education
-- XT University, Microelectronics Science and Engineering, Undergraduate degree (2016.09 ~ 2020.06)
+- XT University, Microelectronics Science and Engineering, bachelor degree (2016.09 ~ 2020.06)
 
 #### Summary
 - Experienced front-end engineer proficient in web native technologies and capable of developing underlying frameworks.
