@@ -9,8 +9,8 @@ let basePath = "";
 
 if (isGithubActions) {
   // 去掉 `<owner>/`
-  const repo = process.env.GITHUB_REPOSITORY.replace(/.*?\//, "");
-
+  const repo = "rxjs-way";
+  console.log("GITHUB_REPOSITORY: ", process.env.GITHUB_REPOSITORY);
   assetPrefix = `/${repo}/`;
   basePath = `/${repo}/`;
 }
