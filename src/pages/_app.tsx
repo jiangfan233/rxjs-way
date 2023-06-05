@@ -2,7 +2,7 @@
 
 import { ClientOnly } from "@/app/components/clientOnly";
 import Head from "next/head";
-import React from "react";
+import React, { useEffect } from "react";
 import "@/app/globals.css";
 import "github-markdown-css/github-markdown-light.css";
 import "highlight.js/styles/github.css";
@@ -11,6 +11,8 @@ const MemoHead = React.memo(() => {
   return (
     <Head>
       <title>The Rxjs Way</title>
+      <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+      <link rel="manifest" href="/manifest.json" />
     </Head>
   );
 });
@@ -18,6 +20,14 @@ const MemoHead = React.memo(() => {
 MemoHead.displayName = "MemoHead";
 
 function MyApp({ Component, pageProps }: { Component: any; pageProps: any }) {
+  useEffect(() => {
+    // Registering Service Worker
+    if ("serviceWorker" in navigator) {
+      console.log("service worker registered");
+      navigator.serviceWorker.register("/serviceworker.js");
+    }
+  }, []);
+
   return (
     <>
       <MemoHead />
