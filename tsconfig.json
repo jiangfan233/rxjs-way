@@ -5,7 +5,6 @@
       "dom",
       "dom.iterable",
       "esnext",
-      "WebWorker"
     ],
     "allowJs": true,
     "skipLibCheck": true,
@@ -38,10 +37,10 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "docs/types/**/*.ts", "public/sw.ts",
+    "docs/types/**/*.ts", 
+    "public/**/*.ts",
   ],
   "exclude": [
     "node_modules",
-  ],
-  
+  ]
 }

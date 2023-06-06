@@ -1,7 +1,7 @@
 {
   "name"              : "The Rxjs Way",
-  "short_name"        : "The Rxjs Way",
-  "description"       : "The Rxjs Way",
+  "short_name"        : "Rxjs-Way",
+  "description"       : "",
   "start_url"         : "/rxjs-way",
   "display"           : "standalone",
   "orientation"       : "any",
@@ -9,9 +9,14 @@
   "theme_color"       : "#ACE",
   "icons": [
     {
-      "src"           : "./logo.png",
+      "src"           : "./logo-72.webp",
       "sizes"         : "72x72",
-      "type"          : "image/png"
+      "type"          : "image/webp"
+    },
+    {
+      "src"           : "./logo-144.webp",
+      "sizes"         : "144x144",
+      "type"          : "image/webp"
     }
   ]
 }

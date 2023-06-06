@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "next build && tsc --lib WebWorker ./docs/sw.ts",
     "start": "next start",
     "lint": "next lint",
     "local-build": "npx --no-install next build"
