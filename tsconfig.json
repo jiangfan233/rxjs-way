@@ -35,13 +35,9 @@
       ]
     },
     "watch": true,
-    "types": [
-      "./src/sw/sw.d.ts"
-    ],
   },
   "include": [
     "next-env.d.ts",
-    "./src/sw/sw.d.ts",
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
@@ -50,12 +46,5 @@
   ],
   "exclude": [
     "node_modules",
-    // "/src/app/sw"
-  ],
-  "files": [
-    "./src/sw/sw.ts",
-  ],
-  "buildOptions": {
-    
-  }
+  ]
 }
