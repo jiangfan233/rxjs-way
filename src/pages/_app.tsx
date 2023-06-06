@@ -3,10 +3,11 @@
 import { ClientOnly } from "@/app/components/clientOnly";
 import Head from "next/head";
 import React, { useEffect } from "react";
+import { isProd } from "@lib/utils";
 import "@/app/globals.css";
 import "github-markdown-css/github-markdown-light.css";
 import "highlight.js/styles/github.css";
-import { isProd } from "@lib/utils";
+import "@public/logo.png";
 
 const MemoHead = React.memo(() => {
   return (

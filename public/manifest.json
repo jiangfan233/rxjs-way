@@ -2,7 +2,7 @@
   "name"              : "The Rxjs Way",
   "short_name"        : "The Rxjs Way",
   "description"       : "The Rxjs Way",
-  "start_url"         : "/",
+  "start_url"         : "/rxjs-way",
   "display"           : "standalone",
   "orientation"       : "any",
   "background_color"  : "#ACE",
