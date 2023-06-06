@@ -1,5 +1,4 @@
 // import App from 'next/app'
-
 import { ClientOnly } from "@/app/components/clientOnly";
 import Head from "next/head";
 import React, { useEffect } from "react";
@@ -16,8 +15,10 @@ const MemoHead = React.memo(() => {
   return (
     <Head>
       <title>The Rxjs Way</title>
-      <meta name="viewport" content="initial-scale=1.0, width=device-width" />
-      <link rel="manifest" href={ isProd() ? "./manifest.json" : "/manifest.json"} />
+          <meta
+            name="viewport"
+            content="initial-scale=1.0, width=device-width"
+          />
     </Head>
   );
 });
@@ -28,8 +29,31 @@ function MyApp({ Component, pageProps }: { Component: any; pageProps: any }) {
   useEffect(() => {
     // Registering Service Worker
     if ("serviceWorker" in navigator) {
-      console.log("service worker registered");
-      navigator.serviceWorker.register(isProd() ? "./serviceworker.js" : "/serviceworker.js");
+      
+      navigator.serviceWorker.register(
+          // isProd() ? "./serviceworker.js" : "/serviceworker.js", 
+          isProd() ? "./sw.js" : "/sw.js", 
+          { 
+            type: "module"
+          })
+        .then(registration => {
+          Notification.requestPermission().then(res => {
+            if(Notification.permission === "granted") {
+              new Notification("Hi there!", { body: "Good to see you!" });
+            }
+          });
+
+          registration.addEventListener("updatefound", e =>{
+            console.log("eee", e);
+          })
+
+          let serviceWorker
+          if(registration.installing) {
+            serviceWorker = registration.installing;
+          }
+
+
+        })
     }
   }, []);
 
@@ -38,8 +62,6 @@ function MyApp({ Component, pageProps }: { Component: any; pageProps: any }) {
       <MemoHead />
       <ClientOnly>
         <Component {...pageProps} />
-        {/* <Layout>
-          </Layout> */}
       </ClientOnly>
     </>
   );

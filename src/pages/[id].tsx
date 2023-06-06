@@ -101,7 +101,7 @@ const Page = React.memo(
 
     // 目前网站托管在静态服务器，menuArray不会频繁更新
     // 但是 getStaticProps 运行在build阶段，无法缓存结果，每次都会返回一个新的 menuArray 对象
-    if (menuArray.length !== currMenuArray.length) {
+    if (menuArray && currMenuArray && menuArray.length !== currMenuArray.length) {
       return false;
     }
     return true;

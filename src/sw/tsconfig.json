@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "lib": [
+      "WebWorker",
+      "WebWorker.ImportScripts",
+      "Webworker.Iterable",
+      "ES2015"
+    ],
+    "watch": true,
+    "outDir": "/public",
+    "types": [
+      "./sw.d.ts"
+    ]
+  },
+  "files": [
+    "./sw.ts"
+  ],
+  "include": [
+    "./sw.ts"
+  ],
+}
