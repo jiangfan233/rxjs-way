@@ -2,15 +2,15 @@
 /// <reference lib="es2015" />
 /// <reference lib="webworker" />
 
-
-// import { fetchWIthTimeout, removeOldVersion } from "@lib/utils";
-
+// 使用了上的reference之后，此脚本和其他模块作用域隔离，无法引入其他模块
 
 /**
  * @type {ServiceWorkerGlobalScope}
  */
+// @ts-nocheck
 const sw = self;
 
+const VERSION = "pwa";
 
 async function removeOldVersion() {
   return caches
@@ -26,6 +26,42 @@ async function removeOldVersion() {
     );
 }
 
+/**
+ * 
+ * @param {FetchEvent.request} request 
+ * @param {Response} response 
+ */
+async function putInCache(request, response) {
+  const cache = await caches.open(VERSION);
+  if (cache) await cache.put(request, response);
+}
+
+/**
+ * 
+ * @param {FetchEvent.request} request 
+ * @param {FetchEvent.preloadResponse} preloadResponsePromise 
+ * @returns {Promise<Response>}
+ */
+async function cacheFirst(request, preloadResponsePromise) {
+  const r = await caches.match(request);
+  if (r) {
+    return r;
+  }
+  let preloadResponse;
+  if (preloadResponsePromise) {
+    // why preloadResponse always be undefined????
+    preloadResponse = await preloadResponsePromise;
+    if (preloadResponse) {
+      putInCache(request, preloadResponse.clone());
+      return preloadResponse;
+    }
+  }
+
+  const response = await fetchWIthTimeout(request, {}, 300);
+  putInCache(request, response.clone());
+  return response;
+}
+
 async function fetchWIthTimeout(url, options = {}, ms) {
   const ctrl = new AbortController();
   const id = setTimeout(() => {
@@ -35,8 +71,6 @@ async function fetchWIthTimeout(url, options = {}, ms) {
   if (res.status == 200) clearTimeout(id);
   return res;
 }
-
-const VERSION = "pwa" + new Date().getTime();
 
 const installFilesEssential = [
   "./manifest.json",
@@ -48,7 +82,7 @@ sw.addEventListener("install", (e) => {
   console.log("[Service Worker] Install");
   e.waitUntil(
     (async () => {
-      await removeOldVersion(VERSION);
+      // await removeOldVersion(VERSION);
       const cache = await caches.open(VERSION);
       console.log("[Service Worker] Caching all: app shell and content");
       await cache.addAll(installFilesEssential);
@@ -61,6 +95,11 @@ sw.addEventListener("activate", (e) => {
   // that loaded regularly over the network,
   // or possibly via a different service worker.
   console.log("activate");
+
+  if(sw.registration) {
+    e.waitUntil(sw.registration?.navigationPreload.enable());
+  }
+
   removeOldVersion(VERSION)
     .then(() => sw.clients.claim())
     .then(() => sw.skipWaiting());
@@ -68,16 +107,13 @@ sw.addEventListener("activate", (e) => {
 
 sw.addEventListener("fetch", (e) => {
   if (e.request.method !== "GET") return;
-  e.respondWith(
-    (async () => {
-      const r = await caches.match(e.request);
-      if (r) {
-        return r;
-      }
-      const response = await fetchWIthTimeout(e.request, {}, 300);
-      const cache = await caches.open(VERSION);
-      if (cache) await cache.put(e.request, response.clone());
-      return response;
-    })()
-  );
+  e.respondWith(cacheFirst(e.request, e.preloadResponse));
 });
+
+
+sw.addEventListener("message", e => {
+  // event is an ExtendableMessageEvent object
+  console.log(`The client sent me a message: ${e.data}`);
+
+  e.source.postMessage("Hi client");
+})
