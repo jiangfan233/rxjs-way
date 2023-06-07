@@ -23,6 +23,7 @@ MemoHead.displayName = "MemoHead";
 
 function MyApp({ Component, pageProps }: { Component: any; pageProps: any }) {
   useEffect(() => {
+    console.log("MyApp");
     // Registering Service Worker
     if ("serviceWorker" in navigator) {
       navigator.serviceWorker
@@ -37,30 +38,23 @@ function MyApp({ Component, pageProps }: { Component: any; pageProps: any }) {
             }
           });
 
+          let serviceWorker = registration.installing;
           registration.addEventListener("updatefound", (e) => {
             // console.log("eee", e);
-          });
-
-          
-
-          let serviceWorker;
-          if (registration.installing) {
             serviceWorker = registration.installing;
-          } else if(registration.active) {
-            serviceWorker = registration.active;
-          }
-          if(!serviceWorker) return;
-          
-          serviceWorker.addEventListener("message", (event) => {
-            // event is a MessageEvent object
-            console.log(`The service worker sent me a message: ${event.data}`, JSON.stringify(event));
+            serviceWorker?.postMessage("Hi service worker!");
           });
-
-          // navigator.serviceWorker.ready.then((regis) => {
-          //   registration.active.postMessage("Hi service worker");
-          // });
-          serviceWorker.postMessage("Hi service worker!");
         });
+
+        navigator.serviceWorker.ready.then((registration) => {
+          registration.active && registration.active.postMessage(
+            "Test message sent immediately after creation"
+          );
+        });
+
+        navigator.serviceWorker.onmessage = function(e) {
+          console.log("sw sent me: ", e);
+        }
     }
   }, []);
 

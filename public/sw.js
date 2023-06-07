@@ -105,8 +105,10 @@ sw.addEventListener("activate", (e) => {
     .then(() => sw.skipWaiting());
 });
 
+
 sw.addEventListener("fetch", (e) => {
   if (e.request.method !== "GET") return;
+  console.log("fetch event");
   e.respondWith(cacheFirst(e.request, e.preloadResponse));
 });
 
