@@ -20,6 +20,7 @@ const MemoHead = React.memo(() => {
   return (
     <Head>
       <title>The Rxjs Way</title>
+      <meta name="theme-color"/>
       <meta name="viewport" content="initial-scale=1.0, width=device-width" />
     </Head>
   );
@@ -32,7 +33,7 @@ function MyApp({ Component, pageProps }: { Component: any; pageProps: any }) {
     if (!existServiceWorker()) return;
 
     (async () => {
-      const scope = "./";
+      const scope = isProd() ? "/rxjs-way" : "./";
       
       let registration = await getRegistration(scope);
       
