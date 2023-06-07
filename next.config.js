@@ -14,6 +14,13 @@ const nextConfig = {
   distDir: "docs",
   reactStrictMode: false,
   output: isProd ? "export" : "standalone",
+
+  // swc
+  compiler: {
+    removeConsole: {
+      exclude: ['error'],
+    },
+  },
 };
 
 module.exports = nextConfig;

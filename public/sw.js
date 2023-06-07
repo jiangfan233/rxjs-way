@@ -27,9 +27,9 @@ async function removeOldVersion() {
 }
 
 /**
- * 
- * @param {FetchEvent.request} request 
- * @param {Response} response 
+ *
+ * @param {FetchEvent.request} request
+ * @param {Response} response
  */
 async function putInCache(request, response) {
   const cache = await caches.open(VERSION);
@@ -37,29 +37,38 @@ async function putInCache(request, response) {
 }
 
 /**
- * 
- * @param {FetchEvent.request} request 
- * @param {FetchEvent.preloadResponse} preloadResponsePromise 
+ * cache first or fetch first, simple implement.
+ * @param {FetchEvent.request} request
+ * @param {FetchEvent.preloadResponse} preloadResponsePromise
  * @returns {Promise<Response>}
  */
-async function cacheFirst(request, preloadResponsePromise) {
+async function getResponse(request, preloadResponsePromise) {
   const r = await caches.match(request);
   if (r) {
     return r;
   }
-  let preloadResponse;
+
   if (preloadResponsePromise) {
     // why preloadResponse always be undefined????
-    preloadResponse = await preloadResponsePromise;
-    if (preloadResponse) {
-      putInCache(request, preloadResponse.clone());
-      return preloadResponse;
+    try {
+      let preloadResponse = await preloadResponsePromise;
+      if (preloadResponse) {
+        putInCache(request, preloadResponse.clone());
+        return preloadResponse;
+      }
+    } catch (err) {
+      console.log(err);
     }
   }
+  try {
+    const response = await fetchWIthTimeout(request, {}, 300);
+    putInCache(request, response.clone());
+    return response;
+  } catch (err) {
+    console.warn(err);
+  }
 
-  const response = await fetchWIthTimeout(request, {}, 300);
-  putInCache(request, response.clone());
-  return response;
+  return new Response("404");
 }
 
 async function fetchWIthTimeout(url, options = {}, ms) {
@@ -96,7 +105,7 @@ sw.addEventListener("activate", (e) => {
   // or possibly via a different service worker.
   console.log("activate");
 
-  if(sw.registration) {
+  if (sw.registration) {
     e.waitUntil(sw.registration?.navigationPreload.enable());
   }
 
@@ -105,17 +114,24 @@ sw.addEventListener("activate", (e) => {
     .then(() => sw.skipWaiting());
 });
 
-
 sw.addEventListener("fetch", (e) => {
   if (e.request.method !== "GET") return;
-  console.log("fetch event");
-  e.respondWith(cacheFirst(e.request, e.preloadResponse));
+  try {
+    e.respondWith(getResponse(e.request, e.preloadResponse));
+  } catch (error) {
+    console.error("fetchEvent:", err);
+  }
 });
 
-
-sw.addEventListener("message", e => {
+sw.addEventListener("message", (e) => {
   // event is an ExtendableMessageEvent object
+  // The simplest model of communcation between the main thread and the serviceWorker thread.
   console.log(`The client sent me a message: ${e.data}`);
-
   e.source.postMessage("Hi client");
-})
+
+  switch (e.data) {
+    case "UPDATE":
+      removeOldVersion();
+      return;
+  }
+});
