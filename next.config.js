@@ -10,17 +10,12 @@ if (isGithubActions) {
   console.log("GITHUB_REPOSITORY: ", process.env.GITHUB_REPOSITORY);
 }
 
-const nextConfig = {
+
+module.exports = {
   distDir: "docs",
   reactStrictMode: false,
   output: isProd ? "export" : "standalone",
-
-  // swc
   compiler: {
-    removeConsole: {
-      exclude: ['error'],
-    },
-  },
+    removeConsole: isProd
+  }
 };
-
-module.exports = nextConfig;
