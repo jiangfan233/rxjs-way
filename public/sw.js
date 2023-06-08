@@ -12,6 +12,8 @@ const sw = self;
 
 const VERSION = "pwa";
 
+let timerId;
+
 async function removeOldVersion() {
   return caches
     .keys()
@@ -81,6 +83,47 @@ async function fetchWIthTimeout(url, options = {}, ms) {
   return res;
 }
 
+async function getWindowClients() {
+  try {
+    return sw.clients.matchAll({
+      type: "window",
+    });
+  } catch (err) {
+    console.log("getWindowClients error", err);
+  }
+}
+
+/**
+ * 
+ * @param {"schedule" | "blur"} type 
+ */
+function checkFocused(type="schedule") {
+  getWindowClients().then((clientList) => {
+    if(clientList.length === 0) client.postMessage("unfocus-" + type);
+    clientList.forEach((client) => {
+      if ("focus" in client && client.visibilityState === "hidden") {
+        client.postMessage("unfocus-" + type);
+        if(type === "schedule") clearInterval(timerId);
+      }
+    });
+  });
+}
+
+
+function befocusd() {
+  getWindowClients().then((clientList) => {
+    console.log("", clientList);
+    if(clientList.length === 0) clients.openWindow("/");
+    for (const client of clientList) {
+      if ("focus" in client) {
+        client.focus();
+        break;
+      }
+    }
+  });
+}
+
+
 const installFilesEssential = [
   "./manifest.json",
   "./logo-72.webp",
@@ -99,7 +142,7 @@ sw.addEventListener("install", (e) => {
   );
 });
 
-sw.addEventListener("activate", (e) => {
+sw.addEventListener("activate", async (e) => {
   // Be aware that this results in your service worker controlling pages
   // that loaded regularly over the network,
   // or possibly via a different service worker.
@@ -109,9 +152,15 @@ sw.addEventListener("activate", (e) => {
     e.waitUntil(sw.registration?.navigationPreload.enable());
   }
 
-  removeOldVersion(VERSION)
-    .then(() => sw.clients.claim())
-    .then(() => sw.skipWaiting());
+  await removeOldVersion(VERSION);
+  await sw.clients.claim();
+  await sw.skipWaiting();
+
+  timerId = setInterval(() => {
+    checkFocused();
+    // clearInterval(id);
+  }, 300);
+
 });
 
 sw.addEventListener("fetch", (e) => {
@@ -127,11 +176,45 @@ sw.addEventListener("message", (e) => {
   // event is an ExtendableMessageEvent object
   // The simplest model of communcation between the main thread and the serviceWorker thread.
   console.log(`The client sent me a message: ${e.data}`);
-  e.source.postMessage("Hi client");
+  // e.source.postMessage("Hi client");
 
-  switch (e.data) {
+  switch(e.data) {
     case "UPDATE":
       removeOldVersion();
       return;
+    case "blur":
+      checkFocused("blur");
+    case "focus":
+      // sw.clients.claim();
+      return;
+    case "focus-back":
+      clearInterval(timerId);
+      befocusd();
+      return;
+    default:
+      // checkFocused();
+      
   }
+});
+
+sw.addEventListener("notificationclick", (event) => {
+  console.log(`On notification click: ${event.notification.tag}`);
+  event.notification.close();
+
+  if(event.action !== "focus") return;
+
+  // This looks to see if the current is already open and
+  // focuses if it is
+  event.waitUntil(
+    clients
+      .matchAll({
+        type: "window",
+      })
+      .then((clientList) => {
+        for (const client of clientList) {
+          if ("focus" in client) return client.focus();
+        }
+        if (clients.openWindow) return clients.openWindow("/");
+      })
+  );
 });

@@ -41,14 +41,27 @@ export const keepServiceWorker = (serviceWorker: ServiceWorker) => {
 
 export const getRegistration = async (scope: string) => {
   let registration: ServiceWorkerRegistration | undefined;
-  registration = await navigator.serviceWorker.getRegistration(scope);
-  if (!registration) {
-    try{
-      registration = await registerNewSw(isProd() ? "./sw.js" : "/sw.js");
-    } catch(err) {
-      console.error("sdasd", err)
-    }
-
+  try{
+    registration = await navigator.serviceWorker.getRegistration(scope);
+    if(registration) return { registration, status: "active" };
+    registration = await registerNewSw(isProd() ? "./sw.js" : "/sw.js");
+    return { registration, status: "installing" };
+  }catch(err) {
+    console.error("get service worker registration error:", err);
   }
-  return registration;
+  
+  return {};
 };
+
+export const getRegistrations = async() => {
+  try{
+    return await navigator.serviceWorker.getRegistrations();
+  } catch(err) {
+    console.error("get service worker registrations error: ", err);
+  }
+}
+
+export async function removeAllCaches() {
+  caches.keys().then(keys => keys.forEach(key => caches.delete(key)));
+}
+

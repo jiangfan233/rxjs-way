@@ -2,7 +2,7 @@
 import { ClientOnly } from "@/app/components/clientOnly";
 import Head from "next/head";
 import React, { useEffect } from "react";
-import { isDev, isProd } from "@lib/utils";
+import { debounce, isDev, isProd } from "@lib/utils";
 
 import "@/app/globals.css";
 import "github-markdown-css/github-markdown-light.css";
@@ -12,7 +12,7 @@ import "@public/logo-144.webp";
 import {
   existServiceWorker,
   getRegistration,
-  registerNewSw,
+  removeAllCaches,
   requestNotifyPermission,
 } from "@lib/utils-pwa";
 
@@ -20,7 +20,7 @@ const MemoHead = React.memo(() => {
   return (
     <Head>
       <title>The Rxjs Way</title>
-      <meta name="theme-color"/>
+      <meta name="theme-color" />
       <meta name="viewport" content="initial-scale=1.0, width=device-width" />
     </Head>
   );
@@ -32,30 +32,81 @@ function MyApp({ Component, pageProps }: { Component: any; pageProps: any }) {
   useEffect(() => {
     if (!existServiceWorker()) return;
 
+    if (isDev()) {
+      removeAllCaches();
+    }
+
     (async () => {
-      const scope = isProd() ? "/rxjs-way" : "./";
-      
-      let registration = await getRegistration(scope);
-      
-      if (!registration) return;
       requestNotifyPermission();
+      const scope = isProd() ? "/rxjs-way/*" : "./*";
 
-      navigator.serviceWorker.ready.then((regis) => {
+      let { registration, status } = await getRegistration(scope);
 
-        let serviceWorker = regis.active;
-        serviceWorker?.postMessage(isDev() ? "DEV" : "PROD");
+      if (!registration) return;
 
-        navigator.serviceWorker.onmessage = function (e) {
-          console.log("sw sent me: ", e.data);
-        };
-      });
+      switch (status) {
+        case "active":
+        // registration.showNotification("")
 
-      registration.addEventListener("updatefound", (e) => {
-        // console.log("eee", e);
-        registration!.installing &&
-          registration!.installing.postMessage("UPDATE");
-      });
+        case "installing":
+          registration = await navigator.serviceWorker.ready;
 
+        default:
+          navigator.serviceWorker.onmessage = function (e) {
+            if (e.data === null && e.data === undefined) return;
+            switch (e.data) {
+              // system-level notification
+              case "unfocus-blur":
+                return registration?.showNotification("I miss you.", {
+                  body: "You need to come back.",
+                  dir: "ltr",
+                  actions: [
+                    {
+                      action: "focus",
+                      title: "Go back",
+                    },
+                    {
+                      action: "close",
+                      title: "Close",
+                    },
+                  ],
+                });
+              case "unfocus-schedule":
+                return new Notification("So the love lost...").addEventListener("click", () => {
+                  registration?.active?.postMessage("focus-back");
+                })
+              default:
+                console.log("sw sent me:", e.data);
+            }
+          };
+
+          // triggered by a new service worker script installing
+          registration.addEventListener("updatefound", async (e) => {
+            if (registration === e.target) return;
+
+            registration!.installing &&
+              registration!.installing.postMessage("UPDATE");
+
+            if (Notification.permission === "granted") {
+              new Notification("New Version!", {
+                body: "Click me to get a better experience.",
+              }).addEventListener("click", (e) => {
+                window.location.reload();
+              });
+            }
+          });
+
+          window.addEventListener("blur", (_: Event) => {
+            document.title = "><";
+            registration?.active?.postMessage("blur");
+          });
+
+          window.addEventListener("focus", (e) => {
+            registration?.active?.postMessage("focus");
+            document.title = "The Rxjs Way";
+            // window.addEventListener("blur", handleBlur);
+          });
+      }
     })();
   }, []);
 
