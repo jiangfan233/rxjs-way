@@ -10,7 +10,7 @@
 // @ts-nocheck
 const sw = self;
 
-const VERSION = "pwa1.1";
+const VERSION = "pwa1.2";
 
 // let timerId;
 
