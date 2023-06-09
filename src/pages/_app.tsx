@@ -1,7 +1,7 @@
 // import App from 'next/app'
 import { ClientOnly } from "@/app/components/clientOnly";
 import Head from "next/head";
-import React, { useCallback, useEffect } from "react";
+import React, { useEffect } from "react";
 import { isDev, isProd } from "@lib/utils";
 
 import "@/app/globals.css";
@@ -32,9 +32,7 @@ function MyApp({ Component, pageProps }: { Component: any; pageProps: any }) {
   useEffect(() => {
     if (!existServiceWorker()) return;
 
-    if (isDev()) {
-      removeAllCaches();
-    }
+    removeAllCaches();
 
     (async () => {
       requestNotifyPermission();
