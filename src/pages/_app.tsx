@@ -2,7 +2,7 @@
 import { ClientOnly } from "@/app/components/clientOnly";
 import Head from "next/head";
 import React, { useEffect } from "react";
-import { debounce, isDev, isProd } from "@lib/utils";
+import { isDev, isProd } from "@lib/utils";
 
 import "@/app/globals.css";
 import "github-markdown-css/github-markdown-light.css";
@@ -12,10 +12,10 @@ import "@public/logo-144.webp";
 import {
   existServiceWorker,
   getRegistration,
+  getRegistrations,
   removeAllCaches,
   requestNotifyPermission,
 } from "@lib/utils-pwa";
-
 const MemoHead = React.memo(() => {
   return (
     <Head>
@@ -46,7 +46,8 @@ function MyApp({ Component, pageProps }: { Component: any; pageProps: any }) {
 
       switch (status) {
         case "active":
-        // registration.showNotification("")
+          // registration.showNotification("")
+          registration.update();
 
         case "installing":
           registration = await navigator.serviceWorker.ready;
@@ -57,9 +58,14 @@ function MyApp({ Component, pageProps }: { Component: any; pageProps: any }) {
             switch (e.data) {
               // system-level notification
               case "unfocus-blur":
+                return new Notification("So the love lost...").addEventListener("click", () => {
+                  registration?.active?.postMessage("focus-back");
+                })
+              case "unfocus-schedule":
                 return registration?.showNotification("I miss you.", {
                   body: "You need to come back.",
                   dir: "ltr",
+                  tag: "notify",
                   actions: [
                     {
                       action: "focus",
@@ -71,10 +77,6 @@ function MyApp({ Component, pageProps }: { Component: any; pageProps: any }) {
                     },
                   ],
                 });
-              case "unfocus-schedule":
-                return new Notification("So the love lost...").addEventListener("click", () => {
-                  registration?.active?.postMessage("focus-back");
-                })
               default:
                 console.log("sw sent me:", e.data);
             }
@@ -82,7 +84,7 @@ function MyApp({ Component, pageProps }: { Component: any; pageProps: any }) {
 
           // triggered by a new service worker script installing
           registration.addEventListener("updatefound", async (e) => {
-            if (registration === e.target) return;
+            console.log("update found")
 
             registration!.installing &&
               registration!.installing.postMessage("UPDATE");

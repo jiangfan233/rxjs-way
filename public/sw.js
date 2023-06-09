@@ -10,7 +10,8 @@
 // @ts-nocheck
 const sw = self;
 
-const VERSION = "pwa";
+
+const VERSION = "pwa" + new Date().getTime();
 
 let timerId;
 
@@ -99,7 +100,7 @@ async function getWindowClients() {
  */
 function checkFocused(type="schedule") {
   getWindowClients().then((clientList) => {
-    if(clientList.length === 0) client.postMessage("unfocus-" + type);
+    // if(clientList.length === 0) client.postMessage("unfocus-" + type);
     clientList.forEach((client) => {
       if ("focus" in client && client.visibilityState === "hidden") {
         client.postMessage("unfocus-" + type);
@@ -112,8 +113,10 @@ function checkFocused(type="schedule") {
 
 function befocusd() {
   getWindowClients().then((clientList) => {
-    console.log("", clientList);
-    if(clientList.length === 0) clients.openWindow("/");
+    if(clientList.length === 0) {
+      clients.openWindow("/");
+      return;
+    }
     for (const client of clientList) {
       if ("focus" in client) {
         client.focus();
@@ -121,6 +124,20 @@ function befocusd() {
       }
     }
   });
+}
+
+/**
+ * 
+ * @param {Function} callback 
+ * @param {number} ms 
+ * @param  {...any} args 
+ * @returns NodeJS.Timer
+ */
+function runTimer(callback=checkFocused, ms=300, ...args) {
+  return setInterval(() => {
+    callback.apply(null, args);
+    // clearInterval(id);
+  }, ms);
 }
 
 
@@ -132,6 +149,7 @@ const installFilesEssential = [
 
 sw.addEventListener("install", (e) => {
   console.log("[Service Worker] Install");
+
   e.waitUntil(
     (async () => {
       // await removeOldVersion(VERSION);
@@ -147,7 +165,6 @@ sw.addEventListener("activate", async (e) => {
   // that loaded regularly over the network,
   // or possibly via a different service worker.
   console.log("activate");
-
   if (sw.registration) {
     e.waitUntil(sw.registration?.navigationPreload.enable());
   }
@@ -156,10 +173,7 @@ sw.addEventListener("activate", async (e) => {
   await sw.clients.claim();
   await sw.skipWaiting();
 
-  timerId = setInterval(() => {
-    checkFocused();
-    // clearInterval(id);
-  }, 300);
+  timerId = runTimer(checkFocused);
 
 });
 
@@ -189,7 +203,7 @@ sw.addEventListener("message", (e) => {
       return;
     case "focus-back":
       clearInterval(timerId);
-      befocusd();
+      // befocusd();
       return;
     default:
       // checkFocused();
@@ -201,7 +215,7 @@ sw.addEventListener("notificationclick", (event) => {
   console.log(`On notification click: ${event.notification.tag}`);
   event.notification.close();
 
-  if(event.action !== "focus") return;
+  if(event.action === "close") return;
 
   // This looks to see if the current is already open and
   // focuses if it is
