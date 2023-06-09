@@ -32,11 +32,14 @@ function MyApp({ Component, pageProps }: { Component: any; pageProps: any }) {
   useEffect(() => {
     if (!existServiceWorker()) return;
 
-    removeAllCaches();
-
     (async () => {
-      requestNotifyPermission();
+
+      await removeAllCaches();
       const scope = isProd() ? "/rxjs-way/*" : "./*";
+      const regs = await getRegistrations();
+      regs?.filter(reg => reg.scope !== scope).forEach(async(reg) => await reg.unregister());
+
+      requestNotifyPermission();
 
       let { registration, status } = await getRegistration(scope);
 

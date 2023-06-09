@@ -63,7 +63,7 @@ async function getResponse(request, preloadResponsePromise) {
     }
   }
   try {
-    const response = await fetchWIthTimeout(request, {}, 300);
+    const response = await fetchWIthTimeout(request, {}, 1000);
     putInCache(request, response.clone());
     return response;
   } catch (err) {
