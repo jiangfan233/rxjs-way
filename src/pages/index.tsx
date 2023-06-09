@@ -22,11 +22,12 @@ export default function Home({ menuArray }: HomeProps) {
   const rxjs = menuArray.find((item) => item.label.includes("rxjs"));
 
   useEffect(() => {
-    // rxjs index
-    router.push(`/${ rxjs?.id || menuArray[0].id}`);
-  }, [menuArray, router]);
+    requestAnimationFrame(() => {
+      router.push(`/${ rxjs?.id || menuArray[0].id}`);
+    })
+  }, []);
   return <div>
-    Hello
-    <Link href={rxjs?.id || menuArray[0].id} />
+    Hello!
+    <Link className="mx-2 text-sky-600" href={`/${rxjs?.id || menuArray[0].id}`}>Click me</Link>
   </div>;
 }

@@ -1,8 +1,10 @@
 import type { GetStaticPaths } from "next";
 import { FileStructure, getDirStructure, getFileContent } from "@lib/post";
-import React, { useMemo } from "react";
-import { Sider } from "@/app/components/layout/sider";
-import { Header } from "@/app/components/layout/header";
+import React, { Suspense, lazy, useMemo } from "react";
+import { Loading } from "@/app/components/loading";
+
+const Sider = lazy(() => import("@/app/components/layout/sider"));
+const Header = lazy(() => import("@/app/components/layout/header"));
 
 const check = (structure: FileStructure[]) => {
   if (!structure || structure.length === 0) return [];
@@ -50,7 +52,6 @@ interface PageProps {
 
 const Page = React.memo(
   ({ content, menuArray }: PageProps) => {
-
     const memoContent = useMemo(() => {
       return content ? (
         <div
@@ -73,7 +74,9 @@ const Page = React.memo(
             xs:p-2
           "
         >
-          <Sider menuArray={menuArray} />
+          <Suspense fallback={<Loading />}>
+            <Sider menuArray={menuArray} />
+          </Suspense>
           <div
             className="
             w-full
@@ -82,8 +85,11 @@ const Page = React.memo(
             justify-start
             md:w-[70%]
             md:mx-auto
-          ">
-            <Header />
+          "
+          >
+            <Suspense fallback={<Loading />}>
+              <Header />
+            </Suspense>
             <div className="p-4 w-full flex flex-col items-center">
               {memoContent}
             </div>
@@ -101,7 +107,11 @@ const Page = React.memo(
 
     // 目前网站托管在静态服务器，menuArray不会频繁更新
     // 但是 getStaticProps 运行在build阶段，无法缓存结果，每次都会返回一个新的 menuArray 对象
-    if (menuArray && currMenuArray && menuArray.length !== currMenuArray.length) {
+    if (
+      menuArray &&
+      currMenuArray &&
+      menuArray.length !== currMenuArray.length
+    ) {
       return false;
     }
     return true;

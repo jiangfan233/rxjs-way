@@ -39,7 +39,7 @@ interface SiderProps {
   menuArray: MenuItemProps[];
 }
 
-export const Sider: React.FC<SiderProps> = React.memo(({ menuArray }) => {
+const Sider: React.FC<SiderProps> = React.memo(({ menuArray }) => {
   const [isShowMenu, toggleMenu] = useState(true);
 
   const memoMenuItems = useMemo(() => {
@@ -115,3 +115,5 @@ export const Sider: React.FC<SiderProps> = React.memo(({ menuArray }) => {
 });
 
 Sider.displayName = "Sider";
+
+export default Sider;

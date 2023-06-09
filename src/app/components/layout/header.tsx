@@ -1,7 +1,7 @@
 import React from "react";
 import { AiOutlineGithub, AiOutlineEdit, AiOutlineBuild } from "react-icons/ai";
 
-export const Header = React.memo(() => {
+const Header = React.memo(() => {
   return (
     <>
       <div className="w-full flex gap-1 xs:gap-4 items-center justify-center relative h-8">
@@ -32,3 +32,5 @@ export const Header = React.memo(() => {
 
 // set display name
 Header.displayName = "Header";
+
+export default Header;
