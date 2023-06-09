@@ -1,7 +1,7 @@
 // import App from 'next/app'
 import { ClientOnly } from "@/app/components/clientOnly";
 import Head from "next/head";
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect } from "react";
 import { isDev, isProd } from "@lib/utils";
 
 import "@/app/globals.css";
@@ -44,6 +44,22 @@ function MyApp({ Component, pageProps }: { Component: any; pageProps: any }) {
 
       if (!registration) return;
 
+      const handleBlur = (_?: Event) => {
+        // registration?.active?.postMessage("blur");
+        if(Notification.permission === "granted") {
+          registration?.showNotification("Hi there!", {
+            body: "Nice to meet you and have a good day~",
+            
+            actions: [
+              {
+                action: "close",
+                title: "close"
+              }
+            ]
+          })
+        }
+      };
+
       switch (status) {
         case "active":
           // registration.showNotification("")
@@ -53,38 +69,20 @@ function MyApp({ Component, pageProps }: { Component: any; pageProps: any }) {
           registration = await navigator.serviceWorker.ready;
 
         default:
+          handleBlur();
           navigator.serviceWorker.onmessage = function (e) {
             if (e.data === null && e.data === undefined) return;
-            switch (e.data) {
-              // system-level notification
-              case "unfocus-blur":
-                return new Notification("So the love lost...").addEventListener("click", () => {
-                  registration?.active?.postMessage("focus-back");
-                })
-              case "unfocus-schedule":
-                return registration?.showNotification("I miss you.", {
-                  body: "You need to come back.",
-                  dir: "ltr",
-                  tag: "notify",
-                  actions: [
-                    {
-                      action: "focus",
-                      title: "Go back",
-                    },
-                    {
-                      action: "close",
-                      title: "Close",
-                    },
-                  ],
-                });
-              default:
-                console.log("sw sent me:", e.data);
+            console.log(e.data);
+            switch(e.data) {
+              case "off":
+                // window.removeEventListener("blur", handleBlur);
+                new Notification("Ok, I shut up...")
             }
           };
 
           // triggered by a new service worker script installing
           registration.addEventListener("updatefound", async (e) => {
-            console.log("update found")
+            console.log("update found");
 
             registration!.installing &&
               registration!.installing.postMessage("UPDATE");
@@ -97,18 +95,9 @@ function MyApp({ Component, pageProps }: { Component: any; pageProps: any }) {
               });
             }
           });
-
-          window.addEventListener("blur", (_: Event) => {
-            document.title = "><";
-            registration?.active?.postMessage("blur");
-          });
-
-          window.addEventListener("focus", (e) => {
-            registration?.active?.postMessage("focus");
-            document.title = "The Rxjs Way";
-            // window.addEventListener("blur", handleBlur);
-          });
       }
+
+      return () => window.removeEventListener("blur", handleBlur);
     })();
   }, []);
 

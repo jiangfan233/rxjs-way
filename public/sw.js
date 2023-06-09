@@ -10,7 +10,6 @@
 // @ts-nocheck
 const sw = self;
 
-
 const VERSION = "pwa" + new Date().getTime();
 
 let timerId;
@@ -95,51 +94,52 @@ async function getWindowClients() {
 }
 
 /**
- * 
- * @param {"schedule" | "blur"} type 
+ *
+ * @param {"schedule" | "blur"} type
  */
-function checkFocused(type="schedule") {
+function checkFocused(type = "schedule") {
   getWindowClients().then((clientList) => {
-    // if(clientList.length === 0) client.postMessage("unfocus-" + type);
-    clientList.forEach((client) => {
-      if ("focus" in client && client.visibilityState === "hidden") {
-        client.postMessage("unfocus-" + type);
-        if(type === "schedule") clearInterval(timerId);
-      }
-    });
+    if(clientList.length > 0) clientList[0].postMessage("unfocus-" + type);
+    // clientList.forEach((client) => {
+    //   if ("focus" in client && client.visibilityState === "hidden") {
+    //     client.postMessage("unfocus-" + type);
+    //     if (type === "schedule") clearInterval(timerId);
+    //   }
+    // });
   });
 }
 
-
-function befocusd() {
-  getWindowClients().then((clientList) => {
-    if(clientList.length === 0) {
-      clients.openWindow("/");
-      return;
-    }
-    for (const client of clientList) {
-      if ("focus" in client) {
-        client.focus();
-        break;
-      }
-    }
-  });
-}
+// seems only opening window or being focused by system-level notifications
+// function befocusd() {
+//   getWindowClients().then((clientList) => {
+//     clients.openWindow("/");
+//     if (clientList.length === 0) {
+//       return;
+//     }
+//     let url = "/";
+//     for (const client of clientList) {
+//       if ("focus" in client) {
+//         url = client.url;
+//         client.focus()
+//           .catch(err => console.warn(err))
+//       }
+//     }
+//   });
+// }
 
 /**
- * 
- * @param {Function} callback 
- * @param {number} ms 
- * @param  {...any} args 
+ *
+ * @param {Function} callback
+ * @param {number} ms
+ * @param  {...any} args
  * @returns NodeJS.Timer
  */
-function runTimer(callback=checkFocused, ms=300, ...args) {
+function runTimer(callback = checkFocused, ms = 300, ...args) {
   return setInterval(() => {
     callback.apply(null, args);
     // clearInterval(id);
   }, ms);
 }
-
 
 const installFilesEssential = [
   "./manifest.json",
@@ -173,8 +173,7 @@ sw.addEventListener("activate", async (e) => {
   await sw.clients.claim();
   await sw.skipWaiting();
 
-  timerId = runTimer(checkFocused);
-
+  // timerId = runTimer(checkFocused);
 });
 
 sw.addEventListener("fetch", (e) => {
@@ -192,43 +191,45 @@ sw.addEventListener("message", (e) => {
   console.log(`The client sent me a message: ${e.data}`);
   // e.source.postMessage("Hi client");
 
-  switch(e.data) {
+  switch (e.data) {
     case "UPDATE":
       removeOldVersion();
       return;
     case "blur":
       checkFocused("blur");
+      return;
     case "focus":
-      // sw.clients.claim();
+      sw.clients.claim();
       return;
     case "focus-back":
-      clearInterval(timerId);
-      // befocusd();
+      // e.waitUntil(
+      //   // clearInterval(timerId);
+      //   // befocusd()
+      //   // timerId = runTimer();
+      // );
       return;
     default:
-      // checkFocused();
-      
+    // checkFocused();
   }
 });
 
 sw.addEventListener("notificationclick", (event) => {
-  console.log(`On notification click: ${event.notification.tag}`);
   event.notification.close();
-
-  if(event.action === "close") return;
 
   // This looks to see if the current is already open and
   // focuses if it is
   event.waitUntil(
-    clients
-      .matchAll({
-        type: "window",
-      })
-      .then((clientList) => {
-        for (const client of clientList) {
-          if ("focus" in client) return client.focus();
+    getWindowClients().then((clientList) => {
+      for (const client of clientList) {
+        if ("focus" in client) {
+          if (event.action === "close") {
+            client.postMessage("off");
+            return;
+          }
+          return client.focus();
         }
-        if (clients.openWindow) return clients.openWindow("/");
-      })
+      }
+      if (event.action !== "close" && clients.openWindow) return clients.openWindow("/");
+    })
   );
 });
