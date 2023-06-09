@@ -76,7 +76,11 @@ async function getResponse(request, preloadResponsePromise) {
 async function fetchWIthTimeout(url, options = {}, ms) {
   const ctrl = new AbortController();
   const id = setTimeout(() => {
-    ctrl.abort();
+    try{
+      ctrl.abort();
+    } catch(err) {
+      console.log("abort fetch", err);
+    }
   }, ms);
   const res = await fetch(url, { ...options, signal: ctrl.signal });
   if (res.status == 200) clearTimeout(id);
