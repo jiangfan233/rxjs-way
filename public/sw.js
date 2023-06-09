@@ -12,7 +12,7 @@ const sw = self;
 
 const VERSION = "pwa1.1";
 
-let timerId;
+// let timerId;
 
 async function removeOldVersion() {
   return caches
@@ -32,30 +32,26 @@ async function removeOldVersion() {
  *
  * @param {FetchEvent.request} request
  * @param {Response} response
+ * @param {string} cacheName
  */
-async function putInCache(request, response) {
-  const cache = await caches.open(VERSION);
+async function putInCache(request, response, cacheName) {
+  const cache = await caches.open(cacheName);
   if (cache) await cache.put(request, response);
 }
 
 /**
- * cache first or fetch first, simple implement.
+ * fetch simple implement.
  * @param {FetchEvent.request} request
  * @param {FetchEvent.preloadResponse} preloadResponsePromise
  * @returns {Promise<Response>}
  */
-async function getResponse(request, preloadResponsePromise) {
-  const r = await caches.match(request);
-  if (r) {
-    return r;
-  }
-
+async function fetchAndCache(request, preloadResponsePromise) {
   if (preloadResponsePromise) {
     // why preloadResponse always be undefined????
     try {
       let preloadResponse = await preloadResponsePromise;
       if (preloadResponse) {
-        putInCache(request, preloadResponse.clone());
+        putInCache(request, preloadResponse.clone(), VERSION);
         return preloadResponse;
       }
     } catch (err) {
@@ -64,13 +60,29 @@ async function getResponse(request, preloadResponsePromise) {
   }
   try {
     const response = await fetchWIthTimeout(request, {}, 1000);
-    putInCache(request, response.clone());
+    putInCache(request, response.clone(), VERSION);
     return response;
   } catch (err) {
     console.warn(err);
   }
+  return new Response("Sorry, the page is gone...");
+}
 
-  return new Response("404");
+/**
+ * cache then fetch, simple implement.
+ * @param {FetchEvent.request} request
+ * @param {FetchEvent.preloadResponse} preloadResponsePromise
+ * @returns {Promise<Response>}
+ */
+async function getResponse(request, preloadResponsePromise) {
+  const r = await caches.match(request);
+  if (r) {
+    setTimeout(() => {
+      fetchAndCache(request, preloadResponsePromise);
+    }, 0);
+    return r;
+  }
+  return await fetchAndCache(request, preloadResponsePromise);
 }
 
 async function fetchWIthTimeout(url, options = {}, ms) {
@@ -172,12 +184,9 @@ sw.addEventListener("activate", async (e) => {
   if (sw.registration) {
     e.waitUntil(sw.registration?.navigationPreload.enable());
   }
-
   await removeOldVersion(VERSION);
   await sw.clients.claim();
   await sw.skipWaiting();
-
-  // timerId = runTimer(checkFocused);
 });
 
 sw.addEventListener("fetch", (e) => {
