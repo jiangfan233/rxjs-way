@@ -59,7 +59,7 @@ async function fetchAndCache(request, preloadResponsePromise) {
     }
   }
   try {
-    const response = await fetchWIthTimeout(request, {}, 1000);
+    const response = await fetchWIthTimeout(request, {}, 3000);
     putInCache(request, response.clone(), VERSION);
     return response;
   } catch (err) {
@@ -77,8 +77,9 @@ async function fetchAndCache(request, preloadResponsePromise) {
 async function getResponse(request, preloadResponsePromise) {
   const r = await caches.match(request);
   if (r) {
-    setTimeout(() => {
+    let id = setTimeout(() => {
       fetchAndCache(request, preloadResponsePromise);
+      clearTimeout(id);
     }, 0);
     return r;
   }
