@@ -126,3 +126,7 @@ const useEffect = (cb: Function) => {
 At this version, i remove the argument called deps in both useState and useEffect, and i change the value of the state to be a Getter function, which i can hold every effect that using the state. <b>Every effect must remove its previous version from all of the dependencies in the state in order to ensure that the latest version is executed.</b>
 
 Thanks for reading.
+
+
+
+Reference:《React设计原理》(ISBN: 9787121444838)
