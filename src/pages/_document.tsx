@@ -36,7 +36,7 @@ class MyDocument extends Document {
             href={isProd() ? "./manifest.json" : "/manifest.json"}
           />
         </Head>
-        <body className="bg-white">
+        <body>
           <Main />
         </body>
         {/* 用来加载nextjs页面脚本，否则运行不正常 */}

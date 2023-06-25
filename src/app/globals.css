@@ -18,6 +18,7 @@ body {
   min-width: 100vw;
   min-height: 100vh;
   overflow-x: hidden;
+  background-color: #213547;
 }
 
 body::-webkit-scrollbar {
@@ -43,13 +44,25 @@ body::-webkit-scrollbar {
 }
 
 @media (prefers-color-scheme: light) {
+  body {
+    background-color: whitesmoke;
+  }
+
   .custom-scheme {
     background-color: rgb(218, 239, 247);
     color: black;
   }
   .global-header {
     color: black;
-    background-color: whitesmoke;
+    background-color: white;
+  }
+
+}
+
+@media (prefers-color-scheme: dark) {
+  .markdown-body {
+    color: whitesmoke !important;
+    background-color: black !important;
   }
 }
 
@@ -67,13 +80,10 @@ body::-webkit-scrollbar {
   box-sizing: border-box;
   margin: 0 auto;
   padding: 1rem;
+  color: whitesmoke;
+  min-height: 100vh;
+  background-color: black;
 }
-
-/* @media(min-width: 768px) {
-  .markdown-body {
-    background-color: rgba(242, 240, 237, .4) !important;
-  }
-} */
 
 .markdown-body ul {
   list-style: disc;

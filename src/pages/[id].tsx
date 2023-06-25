@@ -87,7 +87,7 @@ const Page = React.memo(
             <Suspense fallback={<Loading />}>
               <Header />
             </Suspense>
-            <div className="p-4 w-full flex flex-col items-center">
+            <div className="py-2 w-full flex flex-col items-center">
               {memoContent}
             </div>
           </div>

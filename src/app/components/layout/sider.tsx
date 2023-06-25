@@ -61,7 +61,7 @@ const Sider: React.FC<SiderProps> = React.memo(({ menuArray }) => {
     () => (
       <AiOutlineBars
         size={"1.5rem"}
-        className="absolute top-0 box-content bg-gray-100 text-black left-full cursor-pointer z-10 h-8 px-2 xs:pl-6 xs:pr-4"
+        className="global-header absolute top-0 box-content left-full cursor-pointer z-10 h-8 px-2 xs:pl-6 xs:pr-4"
         onClick={memoToggleMenu}
       />
     ),

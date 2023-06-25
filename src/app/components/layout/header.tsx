@@ -5,7 +5,7 @@ import { AiOutlineGithub, AiOutlineBuild } from "react-icons/ai";
 const Header = React.memo(() => {
   return (
     <>
-      <div className="global-header w-full flex gap-1 xs:gap-4 items-center justify-center relative h-8">
+      <div className="global-header px-2 w-full flex gap-1 xs:gap-4 items-center justify-center relative h-8">
         <h2 className="font-bold text-xl xs:text-2xl grow text-center ml-12">The Rxjs Way</h2>
 
         <div className="grow-0 flex gap-1 xs:gap-4">
