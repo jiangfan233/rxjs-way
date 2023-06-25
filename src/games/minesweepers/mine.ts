@@ -69,4 +69,9 @@ export class MaybeMine extends Pos implements MaybeMineInf {
     return isMarked && !this.isMine();
   }
 
+  clone(): MaybeMine {
+    let cloned = MaybeMine.grass(this.x, this.y);
+    Object.assign(cloned, this);
+    return cloned;
+  }
 }

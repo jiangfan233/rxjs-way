@@ -78,6 +78,10 @@ export class MineSweepers implements MineSpeeperTYpe {
     return this.positions[pos.y][pos.x];
   }
 
+  setPosition(pos: Pos, mine: MaybeMine) {
+    this.positions[pos.y][pos.x] = mine;
+  }
+
   iterDirection(): number[] {
     return [
       Direction.Up,
@@ -122,7 +126,11 @@ export class MineSweepers implements MineSpeeperTYpe {
       this.isFailed = true;
       startPos.isClickError = true;
       this.positions.forEach((row) => {
-        row.forEach((maybeMine) => (maybeMine.isShow = true));
+        row.forEach((old, index, arr) => {
+          const newMine = old.clone();
+          newMine.isShow = true;
+          arr[index] = newMine;
+        });
       });
       return;
     }
@@ -154,7 +162,9 @@ export class MineSweepers implements MineSpeeperTYpe {
       // if there is a mine near current,
       // just update the counts of mine, don't need to
       // dig deeper.
-      this.getPosition(current).setValue(count);
+      let newMine = this.getPosition(current).clone();
+      newMine.setValue(count);
+      this.setPosition(current, newMine);
       if (count <= 0) {
         tmp.forEach((pos) => {
           if (
@@ -184,7 +194,9 @@ export class MineSweepers implements MineSpeeperTYpe {
   }
 
   markMine(maybeMine: MaybeMine) {
-    maybeMine.mark();
+    let cloned = maybeMine.clone();
+    cloned.mark();
+    this.setPosition(maybeMine, cloned);
   }
 }
 export { MaybeMine };

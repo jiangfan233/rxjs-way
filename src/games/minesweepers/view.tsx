@@ -1,11 +1,18 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import {
+  MutableRefObject,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { MineSweepers } from "./minesweepers";
 import { MaybeMine } from "./minesweepers";
 import React from "react";
 
 interface BlockViewInf {
   maybeMine: MaybeMine;
-  handleClick: Function;
+  blockRef: MutableRefObject<MaybeMine>;
 }
 
 enum GameStatus {
@@ -17,15 +24,16 @@ enum GameStatus {
 }
 
 const MemoBlockView = React.memo(
-  function blockView({ maybeMine, handleClick }: BlockViewInf) {
+  function blockView({ maybeMine, blockRef }: BlockViewInf) {
     let { isShow, isClickError } = maybeMine;
     return (
       <>
         <div
           key={maybeMine.asKey()}
           className="mine flex justify-center items-center p-[0.1rem]"
-          onClick={(event: any) => handleClick(event, maybeMine)}
-          onAuxClick={(event: any) => handleClick(event, maybeMine)}
+          // onClick={(event: any) => handleClick(event, maybeMine)}
+          // onAuxClick={(event: any) => handleClick(event, maybeMine)}
+          onMouseDown={(_) => (blockRef.current = maybeMine)}
         >
           {maybeMine.toView()}
 
@@ -36,7 +44,7 @@ const MemoBlockView = React.memo(
                 ? isClickError
                   ? "red"
                   : "#fffcfc"
-                : "inherit"}
+                : "inherit"};
             }
           `}</style>
         </div>
@@ -44,11 +52,22 @@ const MemoBlockView = React.memo(
     );
   },
   (prev, next) => {
-    if (prev.handleClick !== next.handleClick) return false;
-    const { isShow: prevIsShow, value: prevValue } = prev.maybeMine;
-    const { isShow: nextIsShow, value: nextValue } = next.maybeMine;
+    const {
+      isShow: prevIsShow,
+      value: prevValue,
+      isMarked: prevIsMarked,
+    } = prev.maybeMine;
+    const {
+      isShow: nextIsShow,
+      value: nextValue,
+      isMarked: currIsMarked,
+    } = next.maybeMine;
 
-    return prevIsShow === nextIsShow && nextValue === prevValue;
+    return (
+      prevIsShow === nextIsShow &&
+      nextValue === prevValue &&
+      prevIsMarked === currIsMarked
+    );
   }
 );
 
@@ -80,9 +99,7 @@ const TimerView = React.memo(
       return () => {};
     }, [setTimeCount, gameStatus]);
 
-    return (
-      <span key={"timer"}>{timeCount.toString().padStart(3, "0")}</span>
-    );
+    return <span key={"timer"}>{timeCount.toString().padStart(3, "0")}</span>;
   },
   (_, { gameStatus: nextGameStatus }) => {
     if (
@@ -101,38 +118,12 @@ export default function MineSweeperView() {
   const [mineSweeper, setMineSweeper] = useState(
     MineSweepers.default(10, 15, 20)
   );
+  const blockRef = useRef<MaybeMine>(null) as MutableRefObject<MaybeMine>;
 
   const [gameStatus, setGameStatus] = useState(GameStatus.Normal);
 
-  const handleClick = useCallback(
-    (e: any, maybeMine: MaybeMine) => {
-      e.preventDefault();
-      if (mineSweeper.isFailed) return;
-      switch (e.button) {
-        // left button
-        case 0: {
-          setMineSweeper((m) => {
-            m.scan(maybeMine);
-            if (m.isFailed) {
-              setGameStatus(GameStatus.Failed);
-            }
-            return m.clone();
-          });
-          return;
-        }
-
-        // right button
-        case 2: {
-          mineSweeper.markMine(maybeMine);
-          setMineSweeper(mineSweeper.clone());
-        }
-      }
-    },
-    [mineSweeper, setMineSweeper]
-  );
-
   const handleMouseDown = useCallback(
-    function () {
+    function (e: any) {
       if (mineSweeper.isFailed) return;
       setGameStatus(GameStatus.MouseDown);
     },
@@ -140,14 +131,37 @@ export default function MineSweeperView() {
   );
 
   const handleMouseUp = useCallback(
-    function () {
+    function (e: any) {
       if (mineSweeper.isFailed) {
         setGameStatus(GameStatus.Failed);
       } else {
+        let maybeMine = blockRef.current;
+        switch (e.button) {
+          // left button
+          case 0: {
+            setMineSweeper((m) => {
+              m.scan(maybeMine);
+              if (m.isFailed) {
+                setGameStatus(GameStatus.Failed);
+              }
+              return m.clone();
+            });
+            break;
+          }
+
+          // right button
+          case 2: {
+            setMineSweeper((m) => {
+              m.markMine(maybeMine);
+              return m.clone();
+            });
+            break;
+          }
+        }
         setGameStatus(GameStatus.Normal);
       }
     },
-    [mineSweeper]
+    [mineSweeper, setGameStatus, setMineSweeper]
   );
 
   const restart = useCallback(() => {
@@ -183,7 +197,6 @@ export default function MineSweeperView() {
         <MineCountView mineCount={mineSweeper.markedMineCount()} />
         {Emoji}
         <TimerView gameStatus={gameStatus} />
-
       </div>
 
       <div
@@ -197,11 +210,10 @@ export default function MineSweeperView() {
             <MemoBlockView
               key={`${maybeMine.x}-${maybeMine.y}`}
               maybeMine={maybeMine}
-              handleClick={handleClick}
+              blockRef={blockRef}
             />
           </>
         ))}
-
       </div>
 
       <style jsx>{`
