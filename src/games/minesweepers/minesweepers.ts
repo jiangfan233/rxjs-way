@@ -194,6 +194,7 @@ export class MineSweepers implements MineSpeeperTYpe {
   }
 
   markMine(maybeMine: MaybeMine) {
+    if(this.markedMineCount() <= 0) return;
     let cloned = maybeMine.clone();
     cloned.mark();
     this.setPosition(maybeMine, cloned);
