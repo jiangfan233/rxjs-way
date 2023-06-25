@@ -3,22 +3,15 @@
 @tailwind utilities;
 
 :root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+  color-scheme: light dark;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-  }
-}
 
 * {
   padding: 0;
   margin: 0;
+  font-size: inherit;
+  background-color: inherit;
 }
 
 body {
@@ -31,17 +24,56 @@ body::-webkit-scrollbar {
   width: 0;
 }
 
+.game-container {
+  user-select: none;
+  color: inherit;
+  margin: 0;
+  padding: 0;
+  font-size: 1.3rem;
+}
+
+.custom-scheme {
+  background-color: #213547;
+  color: skyblue;
+}
+
+.global-header {
+  color: whitesmoke;
+  background-color: black;
+}
+
+@media (prefers-color-scheme: light) {
+  .custom-scheme {
+    background-color: rgb(218, 239, 247);
+    color: black;
+  }
+  .global-header {
+    color: black;
+    background-color: whitesmoke;
+  }
+}
+
+.mineSweeper-header {
+  display: flex;
+  justify-content: space-between;
+}
+
+.radios {
+  padding-left: 1rem;
+  padding-right: .5rem;
+}
+
 .markdown-body {
   box-sizing: border-box;
   margin: 0 auto;
   padding: 1rem;
 }
 
-@media(min-width: 768px) {
+/* @media(min-width: 768px) {
   .markdown-body {
     background-color: rgba(242, 240, 237, .4) !important;
   }
-}
+} */
 
 .markdown-body ul {
   list-style: disc;

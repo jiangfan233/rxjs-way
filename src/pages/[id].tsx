@@ -39,9 +39,6 @@ export const getStaticProps = ({ params }: { params: { id: string } }) => {
       content,
       menuArray: getDirStructure(),
     },
-    // 每当有用户访问这个页面时，Next.js 会先从缓存中读取已经生成的页面，
-    // 然后检查页面是否过期，如果过期了，则会在后台重新生成页面，并将新页面缓存起来，以供下一次访问时使用。
-    // revalidate: 60,
   };
 };
 
@@ -55,7 +52,7 @@ const Page = React.memo(
     const memoContent = useMemo(() => {
       return content ? (
         <div
-          className="w-full markdown-body"
+          className="w-full markdown-body global-header"
           dangerouslySetInnerHTML={{ __html: content }}
         />
       ) : null;

@@ -71,6 +71,7 @@ const Sider: React.FC<SiderProps> = React.memo(({ menuArray }) => {
   const clickOutside = useClickOutside(siderRef, memoToggleMenu);
 
   useEffect(() => {
+    if(isShowMenu == false) return;
     const [listenClickOutside, stopListen] = clickOutside();
     if (document.documentElement.clientWidth <= 500) {
       listenClickOutside();
@@ -87,7 +88,7 @@ const Sider: React.FC<SiderProps> = React.memo(({ menuArray }) => {
       stopListen();
       cancel();
     };
-  }, [memoToggleMenu, clickOutside]);
+  }, [memoToggleMenu, clickOutside, isShowMenu]);
 
   return (
     <div
@@ -96,7 +97,7 @@ const Sider: React.FC<SiderProps> = React.memo(({ menuArray }) => {
         (isShowMenu
           ? " min-w-4/5 z-10 xs:relative xs:min-w-1/4 xs:max-w-xs"
           : "-translate-x-full") +
-        " transition-transform z-10 flex bg-[#14191f] text-slate-50 items-start justify-start"
+        " transition-transform z-10 flex custom-scheme items-start justify-start"
       }
     >
       <div className="relative w-full">
