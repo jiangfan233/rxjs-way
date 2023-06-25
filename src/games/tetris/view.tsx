@@ -23,6 +23,8 @@ const MemoBlock = React.memo(
   }
 );
 
+MemoBlock.displayName = "MemoBlock";
+
 export default function TetrisView() {
   const [tetris, setTetris] = useState(new Tetris());
   const [speed, setSpeed] = useState(500);

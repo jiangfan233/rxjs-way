@@ -56,6 +56,8 @@ const MineCountView = React.memo(({ mineCount }: { mineCount: number }) => (
   <span key={"minecount"}>{mineCount.toString().padStart(3, "0")}</span>
 ));
 
+MineCountView.displayName = "MineCountView";
+
 const TimerView = React.memo(
   ({ gameStatus }: { gameStatus: GameStatus }) => {
     const [timeCount, setTimeCount] = useState<number>(0);
@@ -76,7 +78,7 @@ const TimerView = React.memo(
       }, 1000);
 
       return () => {};
-    });
+    }, [setTimeCount, gameStatus]);
 
     return (
       <span key={"timer"}>{timeCount.toString().padStart(3, "0")}</span>
@@ -92,6 +94,8 @@ const TimerView = React.memo(
     return true;
   }
 );
+
+TimerView.displayName = "TimerView";
 
 export default function MineSweeperView() {
   const [mineSweeper, setMineSweeper] = useState(
@@ -132,7 +136,7 @@ export default function MineSweeperView() {
       if (mineSweeper.isFailed) return;
       setGameStatus(GameStatus.MouseDown);
     },
-    [mineSweeper, gameStatus, setGameStatus]
+    [mineSweeper, setGameStatus]
   );
 
   const handleMouseUp = useCallback(
@@ -143,7 +147,7 @@ export default function MineSweeperView() {
         setGameStatus(GameStatus.Normal);
       }
     },
-    [mineSweeper, gameStatus, setGameStatus]
+    [mineSweeper]
   );
 
   const restart = useCallback(() => {
@@ -157,7 +161,7 @@ export default function MineSweeperView() {
         {gameStatus}
       </div>
     ),
-    [gameStatus]
+    [gameStatus, restart]
   );
 
   useEffect(() => {

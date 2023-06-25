@@ -24,6 +24,8 @@ const MemoBlock = React.memo(
   }
 );
 
+MemoBlock.displayName = "MemoBlock";
+
 export default function SnakeView() {
   const [gameboard, setGameBoard] = useState(GameBoard.default(20, 20));
   const [direction, setDirection] = useState(Direction.Left);
@@ -53,7 +55,7 @@ export default function SnakeView() {
 
       res && setGameBoard(gameboard.clone());
     },
-    [gameboard, setGameBoard, direction, setDirection]
+    [gameboard, setGameBoard, setDirection]
   );
 
   useEffect(() => {
@@ -101,3 +103,5 @@ export default function SnakeView() {
     </div>
   );
 }
+
+SnakeView.displayName = "SnakeView";

@@ -52,7 +52,7 @@ export default function Game({ menuArray }: { menuArray: FileStructure[] }) {
       setView(viewObj);
       document.documentElement.focus();
     },
-    [view, setView]
+    [setView]
   );
 
   const radios = (

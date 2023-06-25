@@ -37,7 +37,7 @@ export default function Home({ menuArray }: HomeProps) {
         return res;
       });
     }, 1000);
-  }, [countDown, setCountDown]);
+  }, [countDown, setCountDown, menuArray]);
 
   return <div className="p-2 text-2xl">
     Hi there, have a nice day~~
