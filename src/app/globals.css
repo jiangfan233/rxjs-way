@@ -14,6 +14,10 @@
   background-color: inherit;
 }
 
+button:focus {
+  outline: none;
+}
+
 body {
   min-width: 100vw;
   min-height: 100vh;
