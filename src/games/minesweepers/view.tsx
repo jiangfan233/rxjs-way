@@ -7,7 +7,7 @@ import {
   useState,
 } from "react";
 import { MineSweepers } from "./minesweepers";
-import { MaybeMine } from "./minesweepers";
+import { MaybeMine } from "./mine";
 import React from "react";
 
 interface BlockViewInf {
@@ -31,8 +31,6 @@ const MemoBlockView = React.memo(
         <div
           key={maybeMine.asKey()}
           className="mine flex justify-center items-center p-[0.1rem]"
-          // onClick={(event: any) => handleClick(event, maybeMine)}
-          // onAuxClick={(event: any) => handleClick(event, maybeMine)}
           onMouseDown={(_) => (blockRef.current = maybeMine)}
         >
           {maybeMine.toView()}
@@ -83,7 +81,10 @@ const TimerView = React.memo(
     const timerId = useRef<NodeJS.Timer | null>(null);
 
     useEffect(() => {
-      if (gameStatus === GameStatus.Failed) {
+      if (
+        gameStatus === GameStatus.Failed ||
+        gameStatus === GameStatus.Success
+      ) {
         clearInterval(timerId.current!);
         timerId.current = null;
         return;
@@ -100,16 +101,16 @@ const TimerView = React.memo(
     }, [setTimeCount, gameStatus]);
 
     return <span key={"timer"}>{timeCount.toString().padStart(3, "0")}</span>;
-  },
-  (_, { gameStatus: nextGameStatus }) => {
-    if (
-      nextGameStatus === GameStatus.Failed ||
-      nextGameStatus === GameStatus.Restart
-    ) {
-      return false;
-    }
-    return true;
   }
+  // (_, { gameStatus: nextGameStatus }) => {
+  //   if (
+  //     nextGameStatus === GameStatus.Failed ||
+  //     nextGameStatus === GameStatus.Restart
+  //   ) {
+  //     return false;
+  //   }
+  //   return true;
+  // }
 );
 
 TimerView.displayName = "TimerView";
@@ -123,8 +124,8 @@ export default function MineSweeperView() {
   const [gameStatus, setGameStatus] = useState(GameStatus.Normal);
 
   const handleMouseDown = useCallback(
-    function (e: any) {
-      if (mineSweeper.isFailed) return;
+    function (_: any) {
+      if (mineSweeper.isFailed()) return;
       setGameStatus(GameStatus.MouseDown);
     },
     [mineSweeper, setGameStatus]
@@ -132,33 +133,30 @@ export default function MineSweeperView() {
 
   const handleMouseUp = useCallback(
     function (e: any) {
-      if (mineSweeper.isFailed) {
-        setGameStatus(GameStatus.Failed);
-      } else {
-        let maybeMine = blockRef.current;
-        switch (e.button) {
-          // left button
-          case 0: {
-            setMineSweeper((m) => {
-              m.scan(maybeMine);
-              if (m.isFailed) {
-                setGameStatus(GameStatus.Failed);
-              }
-              return m.clone();
-            });
-            break;
-          }
-
-          // right button
-          case 2: {
-            setMineSweeper((m) => {
-              m.markMine(maybeMine);
-              return m.clone();
-            });
-            break;
-          }
+      if (mineSweeper.isFailed() || mineSweeper.isSuccess()) return;
+      let maybeMine = blockRef.current;
+      setGameStatus(GameStatus.Normal);
+      switch (e.button) {
+        // left button
+        case 0: {
+          setMineSweeper((m) => {
+            m.scan(maybeMine);
+            if (m.isFailed()) setGameStatus(GameStatus.Failed);
+            if (m.isSuccess()) setGameStatus(GameStatus.Success);
+            return m.clone();
+          });
+          break;
         }
-        setGameStatus(GameStatus.Normal);
+
+        // right button
+        case 2: {
+          setMineSweeper((m) => {
+            m.markMine(maybeMine);
+            if (m.isSuccess()) setGameStatus(GameStatus.Success);
+            return m.clone();
+          });
+          break;
+        }
       }
     },
     [mineSweeper, setGameStatus, setMineSweeper]

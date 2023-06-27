@@ -12,30 +12,36 @@ export enum Direction {
   LeftUp,
 }
 
-export interface MineSpeeperTYpe {
+export enum Status {
+  Failed = 0,
+  Playing,
+  Success,
+}
+
+export interface MineSpeeperType {
   width: number;
   height: number;
-  isFailed: boolean;
+  status: Status;
   positions: MaybeMine[][];
 }
 
-export class MineSweepers implements MineSpeeperTYpe {
+export class MineSweepers implements MineSpeeperType {
   width: number;
   height: number;
-  isFailed: boolean;
+  status: Status;
   mineCount: number;
   positions: MaybeMine[][];
 
   constructor(
     width: number,
     height: number,
-    isFailed: boolean,
+    status: Status,
     mineCount: number,
     positions: MaybeMine[][]
   ) {
     this.width = width;
     this.height = height;
-    this.isFailed = isFailed;
+    this.status = status
     this.mineCount = mineCount;
     this.positions = positions;
   }
@@ -60,7 +66,7 @@ export class MineSweepers implements MineSpeeperTYpe {
       }
     }
 
-    return new MineSweepers(width, height, false, mineCount, positions);
+    return new MineSweepers(width, height, Status.Playing, mineCount, positions);
   }
 
   isMine(pos: Pos): Boolean {
@@ -122,8 +128,8 @@ export class MineSweepers implements MineSpeeperTYpe {
 
   scan(startPos: MaybeMine) {
     if(startPos.isMarked) return;
-    if (this.isMine(startPos)) {
-      this.isFailed = true;
+    if (startPos.isMine()) {
+      this.status = Status.Failed;
       startPos.isClickError = true;
       this.positions.forEach((row) => {
         row.forEach((old, index, arr) => {
@@ -134,12 +140,13 @@ export class MineSweepers implements MineSpeeperTYpe {
       });
       return;
     }
-    this.search(startPos, []);
+    this.search(startPos);
   }
 
-  search(pos: Pos, scanned: Pos[] = []) {
+  search(pos: MaybeMine) {
     let queue = [pos];
     const dirs = this.iterDirection();
+    let scanned: Pos[] = [];
 
     while (queue.length) {
       let current = queue.shift()!;
@@ -149,12 +156,14 @@ export class MineSweepers implements MineSpeeperTYpe {
         let dir = dirs[i];
         let nextPos = this.next(current, dir);
         if (!this.isInBounds(nextPos)) continue;
-        if (this.getPosition(nextPos).isMarked) continue;
 
-        if (this.isMine(nextPos)) {
+        let nextBlock = this.getPosition(nextPos);
+        // if (nextBlock.isMarked) continue;
+
+        if (nextBlock.isMine()) {
           count += 1;
         } else {
-          tmp.push(nextPos);
+          tmp.push(nextBlock);
         }
       }
 
@@ -162,8 +171,8 @@ export class MineSweepers implements MineSpeeperTYpe {
       // if there is a mine near current,
       // just update the counts of mine, don't need to
       // dig deeper.
-      let newMine = this.getPosition(current).clone();
-      newMine.setValue(count);
+      let newMine = current.clone();
+      newMine.setValue(count).setShow(true);
       this.setPosition(current, newMine);
       if (count <= 0) {
         tmp.forEach((pos) => {
@@ -179,25 +188,40 @@ export class MineSweepers implements MineSpeeperTYpe {
   }
 
   clone() {
-    const { width, height, isFailed, mineCount, positions } = this;
-    return new MineSweepers(width, height, isFailed, mineCount, positions);
+    const { width, height, status, mineCount, positions } = this;
+    return new MineSweepers(width, height, status, mineCount, positions);
   }
 
   iterPosition() {
     return this.positions.flatMap((arr) => arr.map((p) => p));
   }
 
+  allMine() {
+    return this.iterPosition().filter(p => p.isMine());
+  }
+
   markedMineCount() {
-    return this.mineCount - this.iterPosition().filter(
+    let res = this.mineCount - this.iterPosition().filter(
       (maybeMine) => maybeMine.isMarked
     ).length;
+    return res;
   }
 
   markMine(maybeMine: MaybeMine) {
-    if(this.markedMineCount() <= 0) return;
     let cloned = maybeMine.clone();
     cloned.mark();
     this.setPosition(maybeMine, cloned);
+    if(this.markedMineCount() === 0 && this.allMine().every(mine => mine.isMarked)) {
+      this.status = Status.Success;
+    }
   }
+
+  isFailed() :boolean {
+    return this.status === Status.Failed;
+  }
+
+  isSuccess() :boolean {
+    return this.status === Status.Success;
+  }
+
 }
-export { MaybeMine };

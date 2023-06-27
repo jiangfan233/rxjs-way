@@ -39,8 +39,7 @@ export class MaybeMine extends Pos implements MaybeMineInf {
   }
 
   mark() {
-    const { isShow } = this;
-    if(isShow) return;
+    if(this.isShow) return;
     this.isMarked = !this.isMarked;
   }
 
@@ -51,7 +50,12 @@ export class MaybeMine extends Pos implements MaybeMineInf {
 
   setValue(count: number) {
     this.value = count;
-    this.isShow = true;
+    return this;
+  }
+
+  setShow(v: boolean) {
+    this.isShow = v;
+    return this;
   }
 
   toView() {
