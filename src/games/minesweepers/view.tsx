@@ -70,7 +70,7 @@ const MemoBlockView = React.memo(
 );
 
 const MineCountView = React.memo(({ mineCount }: { mineCount: number }) => (
-  <span key={"minecount"}>{mineCount.toString().padStart(3, "0")}</span>
+  <span key={"minecount"} className={mineCount < 0 ? "text-red-500" : ""}>{mineCount.toString().padStart(3, "0")}</span>
 ));
 
 MineCountView.displayName = "MineCountView";

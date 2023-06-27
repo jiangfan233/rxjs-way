@@ -178,7 +178,8 @@ export class MineSweepers implements MineSpeeperType {
         tmp.forEach((pos) => {
           if (
             queue.every((posInQueue) => !posInQueue.eq(pos)) &&
-            scanned.every((posScanned) => !posScanned.eq(pos))
+            scanned.every((posScanned) => !posScanned.eq(pos)) &&
+            !pos.isMarked
           ) {
             queue.push(pos);
           }
