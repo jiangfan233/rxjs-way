@@ -34,7 +34,7 @@ steps{A[0, i) -> B[0, j - 1)} + 1 == steps{A[0, i) -> B[0, j)}
 
 Actually, i don't know what the answer is for steps{A[0, i) -> B[0, j - 1)}. To **simplify** the question, which i mean by (**j - 1**), i have to assume that I already have the answer.
 
-Since adding a char or deleting a char are just the two sides of a mirror, i can achieve this expression:
+Since adding a char or deleting a char are just the two sides of one coin, i can achieve this expression:
 
 ```javascript
 steps{B[0, j) -> A[0, i - 1)} + 1 == steps{B[0, j) -> A[0, i)}

@@ -76,17 +76,16 @@ Here are the "corrected" codes:
 type Getter<T> = () => T;
 type Setter<T> = (newVal: T) => void;
 type Effect = {
-    fn: Function,
-    deps: Set<Set<Effect>>;
-}
+  fn: Function;
+  deps: Set<Set<Effect>>;
+};
 
 const effectArray: Effect[] = [];
 
-
 const connect = (subs: Set<Effect>, effect: Effect) => {
-    subs.add(effect);
-    effect.deps.add(subs);
-}
+  subs.add(effect);
+  effect.deps.add(subs);
+};
 
 const useState = <T>(val: T): [Getter<T>, Setter<T>] => {
   const subs = new Set<Effect>();
@@ -99,13 +98,18 @@ const useState = <T>(val: T): [Getter<T>, Setter<T>] => {
 
   const setState = (newVal: T) => {
     val = newVal;
-    subs.forEach((effect) => {
-        // always keep the latest version of the effect!!!
-        // cause the result of execution of the effect may change at some time.
-        // cause the state always changing!!!!
-        effect.deps.forEach(deps => deps.delete(effect));
-        // effect: after removing my pervious version, add my latest version!!
-        effect.fn.call(null);
+
+    // the latest version of effect will be added to the subs during the execution of forEach,
+    // which will cause an endless loop of we call the forEach method on subs directly!!!
+    [...subs].forEach((effect) => {
+      // always keep the latest version of the effect!!!
+      // cause the result of execution of the effect may change at some time.
+      // cause the state always changing!!!!
+      effect.deps.forEach((deps) => deps.delete(effect));
+      // effect: after removing my pervious version, add my latest version!!
+      effectArray.push(effect);
+      effect.fn.call(null);
+      effectArray.pop();
     });
   };
 
@@ -115,11 +119,12 @@ const useState = <T>(val: T): [Getter<T>, Setter<T>] => {
 const useEffect = (cb: Function) => {
   effectArray.push({
     fn: cb,
-    deps: new Set()
+    deps: new Set(),
   });
   cb.call(null);
   effectArray.pop();
 };
+
 
 ```
 
