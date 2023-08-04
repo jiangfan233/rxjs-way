@@ -16,7 +16,7 @@ export GITLAB_HOME=~/gitlab
 
 ```
 
-- 1、First, pull the gitlab image. [how to install ?](https://podman.io/docs/installation)
+- 1、First, pull the gitlab image. [how to install podman ?](https://podman.io/docs/installation)
 
 ```bash
 # this image is about 3G, it's gonna take a while.
