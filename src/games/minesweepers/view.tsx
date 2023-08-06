@@ -27,26 +27,24 @@ const MemoBlockView = React.memo(
   function blockView({ maybeMine, blockRef }: BlockViewInf) {
     let { isShow, isClickError } = maybeMine;
     return (
-      <>
-        <div
-          key={maybeMine.asKey()}
-          className="mine flex justify-center items-center p-[0.1rem]"
-          onMouseDown={(_) => (blockRef.current = maybeMine)}
-        >
-          {maybeMine.toView()}
+      <div
+        key={maybeMine.asKey()}
+        className="mine flex justify-center items-center p-[0.1rem]"
+        onMouseDown={(_) => (blockRef.current = maybeMine)}
+      >
+        {maybeMine.toView()}
 
-          <style jsx>{`
+        <style jsx>{`
             .mine {
               border: 1px solid #d6d6ae;
               background-color: ${isShow
-                ? isClickError
-                  ? "red"
-                  : "#fffcfc"
-                : "inherit"};
+            ? isClickError
+              ? "red"
+              : "#fffcfc"
+            : "inherit"};
             }
           `}</style>
-        </div>
-      </>
+      </div>
     );
   },
   (prev, next) => {
@@ -97,7 +95,7 @@ const TimerView = React.memo(
         setTimeCount((t) => t + 1);
       }, 1000);
 
-      return () => {};
+      return () => { };
     }, [setTimeCount, gameStatus]);
 
     return <span key={"timer"}>{timeCount.toString().padStart(3, "0")}</span>;
@@ -204,13 +202,11 @@ export default function MineSweeperView() {
         className="mineSweeper-container cursor-pointer"
       >
         {mineSweeper.iterPosition().map((maybeMine) => (
-          <>
-            <MemoBlockView
-              key={`${maybeMine.x}-${maybeMine.y}`}
-              maybeMine={maybeMine}
-              blockRef={blockRef}
-            />
-          </>
+          <MemoBlockView
+            key={`${maybeMine.x}-${maybeMine.y}`}
+            maybeMine={maybeMine}
+            blockRef={blockRef}
+          />
         ))}
       </div>
 
