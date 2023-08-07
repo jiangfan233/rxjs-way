@@ -1,4 +1,3 @@
-/** @type {import('next').NextConfig} */
 
 // const repo = "https://jiangfan233.github.io/rxjs-way";
 const isGithubActions = process.env.GITHUB_ACTIONS || false;
@@ -11,7 +10,11 @@ if (isGithubActions) {
 }
 
 
+/** @type {import('next').NextConfig} */
 module.exports = {
+  experimental: {
+    serverActions: true,
+  },
   distDir: "docs",
   reactStrictMode: false,
   output: isProd ? "export" : "standalone",

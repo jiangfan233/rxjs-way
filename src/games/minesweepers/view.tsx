@@ -36,7 +36,7 @@ const MemoBlockView = React.memo(
 
         <style jsx>{`
             .mine {
-              border: 1px solid #d6d6ae;
+              border: 0.5px solid #40402d;
               background-color: ${isShow
             ? isClickError
               ? "red"

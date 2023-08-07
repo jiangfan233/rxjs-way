@@ -14,7 +14,7 @@ const MemoBlock = React.memo(
   }) => {
     return (
       <div
-        className="flex justify-center items-center border-r-[.5px] border-b-[.5px] border-solid border-orange-500"
+        className="flex justify-center items-center border-r-[.5px] border-b-[.5px] border-solid border-gray-500"
         key={`${x}-${y}`}
       >
         {colorShape}
