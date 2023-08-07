@@ -1,5 +1,5 @@
-import Sider from "@/app/components/layout/sider";
-import { Loading } from "@/app/components/loading";
+import Sider from "@/components/sider";
+import { Loading } from "@/components/loading";
 import { FileStructure, getDirStructure, getFileContent } from "@lib/post";
 import {
   ReactNode,

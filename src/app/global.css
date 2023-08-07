@@ -4,6 +4,13 @@
 
 :root {
   color-scheme: light dark;
+
+  --dark-scheme-bg-color: rgb(24, 24, 24);
+  --dark-scheme-comp-color: rgb(34, 34, 34);
+  --dark-scheme-text-color: whitesmoke;
+
+  --light-scheme-bg-color: skyblue;
+  --light-scheme-text-color: rgb(22, 22, 22);
 }
 
 
@@ -12,6 +19,7 @@
   margin: 0;
   font-size: inherit;
   background-color: inherit;
+  box-sizing: border-box;
 }
 
 button:focus {
@@ -19,10 +27,7 @@ button:focus {
 }
 
 body {
-  min-width: 100vw;
-  min-height: 100vh;
-  overflow-x: hidden;
-  background-color: #213547;
+  background-color: var(--dark-scheme-bg-color);
 }
 
 body::-webkit-scrollbar {
@@ -38,27 +43,28 @@ body::-webkit-scrollbar {
 }
 
 .custom-scheme {
-  background-color: #213547;
+  background-color: #0d0f11;
   color: skyblue;
 }
 
 .global-header {
-  color: whitesmoke;
-  background-color: rgb(49, 49, 49);
+  color: var(--dark-scheme-text-color);
+  background-color: var(--dark-scheme-comp-color);
+}
+
+.global-sider {
+  color: var(--dark-scheme-text-color);
+  background-color: var(--dark-scheme-comp-color);
 }
 
 @media (prefers-color-scheme: light) {
   body {
-    background-color: whitesmoke;
+    background-color: var(--light-scheme-bg-color);
   }
 
-  .custom-scheme {
-    background-color: rgb(218, 239, 247);
-    color: black;
-  }
   .global-header {
-    color: black;
-    background-color: white;
+    color: var(--light-scheme-text-color);
+    background-color: var(--light-scheme-bg-color);
   }
 
 }
@@ -66,7 +72,7 @@ body::-webkit-scrollbar {
 @media (prefers-color-scheme: dark) {
   .markdown-body {
     color: whitesmoke !important;
-    background-color: rgb(49, 49, 49) !important;
+    background-color: var(--dark-scheme-bg-color) !important;
   }
 }
 
@@ -75,18 +81,14 @@ body::-webkit-scrollbar {
   justify-content: space-between;
 }
 
-.radios {
-  padding-left: 1rem;
-  padding-right: .5rem;
-}
 
 .markdown-body {
   box-sizing: border-box;
   margin: 0 auto;
   padding: 1rem;
-  color: whitesmoke;
+  color: var(--dark-scheme-text-color);
   min-height: 100vh;
-  background-color: black;
+  background-color: var(--dark-scheme-bg-color);
 }
 
 .markdown-body ul {
@@ -96,4 +98,3 @@ body::-webkit-scrollbar {
 .markdown-body blockquote {
   font-size: 1.2rem;
 }
-
