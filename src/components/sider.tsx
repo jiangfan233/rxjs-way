@@ -1,23 +1,24 @@
 "use client";
 
 import React, {
-  useCallback,
   useEffect,
   useMemo,
   useRef,
   useState,
 } from "react";
-import Link from "next/link";
 import { FileStructure } from "@lib/post";
 import { useClickOutside } from "@lib/hooks";
 import { handleScreenResize } from "@lib/utils";
-import { ViewObj } from "@/app/(root)/types";
 
-type MenuItemProps = FileStructure;
 
-const MenuItem = ({ label, id: path, subMenus }: MenuItemProps) => (
+type MenuItemProps = FileStructure & {
+  // handleIdChange: Function;
+  activeId: string;
+};
+
+const MenuItem = ({ label, id: path, subMenus, activeId }: MenuItemProps) => (
   <li className="ml-3 whitespace-nowrap list-inside">
-    <Link className="" href={path}>{label}</Link>
+    <span className={(path === activeId ? " text-lg font-semibold text-orange-500" : "text-base") + " cursor-pointer"} id={path}>{label}</span>
     {subMenus ? (
       <ol className="list-disc">
         {subMenus.map(
@@ -27,6 +28,7 @@ const MenuItem = ({ label, id: path, subMenus }: MenuItemProps) => (
               label={childLabel}
               id={childPath}
               subMenus={childChildren}
+              activeId={activeId}
             />
           )
         )}
@@ -39,63 +41,39 @@ const MenuItem = ({ label, id: path, subMenus }: MenuItemProps) => (
 interface SiderProps {
   isShowMenu: Boolean;
   toggleMenu: Function;
-  gameViewArr: ViewObj[];
-  setView: Function;
-  gameView: ViewObj;
+  handleIdChange: Function;
+  activeId: string;
 }
 
-const Sider: React.FC<SiderProps> = React.memo(({ isShowMenu, toggleMenu, gameViewArr, setView, gameView }) => {
+const Sider: React.FC<SiderProps> = React.memo(({ isShowMenu, toggleMenu, handleIdChange, activeId }) => {
 
-  const [menuArray, setMenuArray] = useState([]);
+  const [menuArray, setMenuArray] = useState<FileStructure[]>([{
+    label: "Old tiny games",
+    id: "gamesMenu",
+    subMenus: [
+      { label: "mine sweepers", id: "mineSweepers", subMenus: null },
+      { label: "snake", id: "snake", subMenus: null },
+      { label: "tetris", id: "tetris", subMenus: null },
+    ]
+  }]);
 
-  const memoMenuItems = useMemo(() => {
-    return (
-      menuArray &&
-      menuArray.map(({ label, id, subMenus }) => (
-        <MenuItem key={id + label} label={label} id={id} subMenus={subMenus} />
-      ))
-    );
-  }, [menuArray]);
+  const memoMenuItems = useMemo(() => <>
+    {menuArray.map(({ label, id, subMenus: menuItems }) =>
+      <div key={id}>
+        <p className="mb-1">{label}</p>
+        {menuItems ? <ul key={id} className={" mb-3 global-sider rounded-md pr-4"}>
+          {menuItems.map(({ label, id, subMenus }) => (
+            <MenuItem key={id + label} label={label} id={id} subMenus={subMenus} activeId={activeId} />
+          ))}
+        </ul> : null}
+      </div>
+    )}
+  </>, [menuArray, activeId]);
 
 
   const siderRef = useRef<HTMLDivElement>(null);
 
   const clickOutside = useClickOutside(siderRef, toggleMenu);
-
-  
-
-  const handleClick = useCallback(
-    (e: MouseEvent, viewObj: ViewObj) => {
-      e.preventDefault();
-      setView(viewObj);
-      document.documentElement.focus();
-    },
-    [setView]
-  );
-
-  const radios = useMemo(() => <>
-    <p className="mb-1">Old Tiny Games</p>
-    <ul className="pl-8 list-disc p-2 global-sider rounded-md">
-      {gameViewArr.map((viewObj) => (
-        <li key={viewObj.key}>
-          <label className="cursor-pointer">
-            <button
-              className={
-                "px-1 rounded-lg " +
-                (viewObj.key == gameView.key
-                  ? "border-indigo-300 border-2 border-solid bg-indigo-400 text-white"
-                  : "")
-              }
-              name="selector"
-              onClick={(e: any) => handleClick(e, viewObj)}
-            >
-              {viewObj.key}
-            </button>
-          </label>
-        </li>
-      ))}
-    </ul>
-  </>, [gameView]);
 
   // click outside
   useEffect(() => {
@@ -123,26 +101,32 @@ const Sider: React.FC<SiderProps> = React.memo(({ isShowMenu, toggleMenu, gameVi
       const res = await fetch("/api");
       const { code, data } = await res.json();
       if (code == 200) {
-        setMenuArray(data);
+        setMenuArray(items => [{ label: "Reading & Doing", id: "Reading & Doing", subMenus: data }, ...items]);
       }
     }
     getData();
-  }, [])
+  }, [menuArray])
 
   return (
     <div
       ref={siderRef}
-      className={(isShowMenu 
-        ? "max-h-[100vh] overflow-scroll" 
-        : "absolute -z-10 opacity-0 max-h-0") 
-      + " w-fit pr-1 transition-all duration-300 rounded-md overflow-hidden list-disc"}
+      onClick={(e) => {
+        e.stopPropagation();
+        // @ts-ignore
+        if(e.target.id !== undefined && e.target.id != "") {
+          // @ts-ignore
+          handleIdChange(e.target.id);
+
+        }
+      }}
+      className={(isShowMenu
+        ? "max-h-[100vh] overflow-scroll"
+        : "absolute -z-10 opacity-0 max-h-0")
+        + " w-fit min-w-[20rem] pr-1 transition-all duration-300 rounded-md select-none overflow-hidden list-disc"}
     >
-      <ol
-        className={" mb-3 global-sider rounded-md pr-4"}
-      >
-        {memoMenuItems}
-      </ol>
-      {radios}
+
+      {memoMenuItems}
+
     </div>
   );
 });

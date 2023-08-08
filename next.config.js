@@ -17,7 +17,7 @@ module.exports = {
   },
   distDir: "docs",
   reactStrictMode: false,
-  output: isProd ? "export" : "standalone",
+  output: "standalone",
   compiler: {
     removeConsole: isProd
   }

@@ -9,7 +9,8 @@
   --dark-scheme-comp-color: rgb(34, 34, 34);
   --dark-scheme-text-color: whitesmoke;
 
-  --light-scheme-bg-color: skyblue;
+  --light-scheme-bg-color: rgb(236, 231, 231);
+  --light-scheme-comp-color: whitesmoke;
   --light-scheme-text-color: rgb(22, 22, 22);
 }
 
@@ -43,8 +44,8 @@ body::-webkit-scrollbar {
 }
 
 .custom-scheme {
-  background-color: #0d0f11;
-  color: skyblue;
+  background-color: var(--dark-scheme-comp-color);
+  color: var(--light-scheme-text-color);
 }
 
 .global-header {
@@ -64,16 +65,29 @@ body::-webkit-scrollbar {
 
   .global-header {
     color: var(--light-scheme-text-color);
+    background-color: var(--light-scheme-comp-color);
+  }
+
+  .global-sider {
+    color: var(--light-scheme-text-color);
+    background-color: var(--light-scheme-comp-color);
+  }
+
+  .custom-scheme {
+    background-color: var(--light-scheme-comp-color);
+    color: var(--light-scheme-text-color);
+  }
+
+  .markdown-body {
+    color: var(--dark-scheme-text-color);
     background-color: var(--light-scheme-bg-color);
   }
 
 }
 
-@media (prefers-color-scheme: dark) {
-  .markdown-body {
-    color: whitesmoke !important;
-    background-color: var(--dark-scheme-bg-color) !important;
-  }
+.markdown-body {
+  color: var(--light-scheme-bg-color);
+  background-color: var(--dark-scheme-comp-color);
 }
 
 .mineSweeper-header {
@@ -86,9 +100,8 @@ body::-webkit-scrollbar {
   box-sizing: border-box;
   margin: 0 auto;
   padding: 1rem;
-  color: var(--dark-scheme-text-color);
   min-height: 100vh;
-  background-color: var(--dark-scheme-bg-color);
+  border-radius: 10px;
 }
 
 .markdown-body ul {

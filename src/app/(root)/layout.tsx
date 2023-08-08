@@ -3,8 +3,9 @@
 import { Loading } from "@/components/loading"
 import dynamic from "next/dynamic"
 import "@/app/global.css";
-import { ComponentType, useMemo, useState } from "react";
-import { ViewObj } from "./types";
+import { useState } from "react";
+import "github-markdown-css/github-markdown-light.css";
+import "highlight.js/styles/github.css";
 
 // export const metadata = {
 //   title: 'Programming Journey',
@@ -20,21 +21,10 @@ const DynamicSider = dynamic(() => import("@/components/sider"), {
   loading: () => <Loading size={"4rem"} />
 })
 
-const DynamicContent = dynamic(() => import("@/app/(root)/page"), {
-  loading: () => <Loading size={"2rem"} />
+const DynamicContent = dynamic(() => import("@/components/page"), {
+  loading: () => <Loading size={"2rem"} />,
+  ssr: false
 })
-
-const tetrisView = dynamic(() => import("@/games/tetris/view"), {
-  loading: () => <Loading size="4rem" />
-});
-const snakeView = dynamic(() => import("@/games/snake/view"), {
-  loading: () => <Loading size="4rem" />
-});
-const mineSweeperView = dynamic(() => import("@/games/minesweepers/view"), {
-  loading: () => <Loading size="4rem" />
-});
-
-
 
 export default function RootLayout({
   children,
@@ -44,16 +34,7 @@ export default function RootLayout({
 
   const [isShowMenu, toggleMenu] = useState(true);
 
-  const gameViewArr = useMemo(
-    () => [
-      { key: "mineSweeper", comp: mineSweeperView },
-      { key: "tetris", comp: tetrisView },
-      { key: "snake", comp: snakeView },
-    ],
-    [tetrisView, snakeView, mineSweeperView]
-  );
-
-  const [gameView, setGameView] = useState<ViewObj>(gameViewArr[0]);
+  const [activeId, handleIdChange] = useState("mineSweepers");
 
   return (
     <html lang="en">
@@ -64,21 +45,20 @@ export default function RootLayout({
       </head>
       <body>
         <div
-          className="flex gap-2 items-start justify-start m-2"
+          className="flex gap-2 items-start justify-center m-2"
         >
           <DynamicSider 
             isShowMenu={isShowMenu} 
             toggleMenu={toggleMenu} 
-            gameViewArr={gameViewArr}
-            setView={setGameView}
-            gameView={gameView}
+            activeId={activeId}
+            handleIdChange={handleIdChange}
           />
-          <div className="grow flex flex-col gap-2 items-center">
+          <div className="grow flex flex-col gap-2 items-center max-w-[60vw]">
             <DynamicHeader 
               isShowMenu={isShowMenu} 
               toggleMenu={toggleMenu}
             />
-            <DynamicContent content={gameView} />
+            <DynamicContent activeId={activeId} />
           </div>
         </div>
       </body>
