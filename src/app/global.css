@@ -79,15 +79,25 @@ body::-webkit-scrollbar {
   }
 
   .markdown-body {
-    color: var(--dark-scheme-text-color);
-    background-color: var(--light-scheme-bg-color);
+    color: var(--dark-scheme-text-color) !important;
+    background-color: var(--light-scheme-comp-color) !important;
   }
+
+  /* .markdown-body code {
+    background-color: var(--light-scheme-bg-color) !important;
+    color: var(--light-scheme-text-color) !important;
+  } */
 
 }
 
 .markdown-body {
-  color: var(--light-scheme-bg-color);
-  background-color: var(--dark-scheme-comp-color);
+  background-color: var(--dark-scheme-comp-color) !important;
+  /* color: var(--dark-scheme-text-color) !important; */
+  box-sizing: border-box;
+  margin: 0 auto;
+  padding: 1rem;
+  min-height: 100vh;
+  border-radius: 10px;
 }
 
 .mineSweeper-header {
@@ -96,18 +106,18 @@ body::-webkit-scrollbar {
 }
 
 
-.markdown-body {
-  box-sizing: border-box;
-  margin: 0 auto;
-  padding: 1rem;
-  min-height: 100vh;
-  border-radius: 10px;
-}
-
 .markdown-body ul {
   list-style: disc;
 }
 
 .markdown-body blockquote {
   font-size: 1.2rem;
+}
+
+.markdown-body code {
+  background-color: var(--dark-scheme-text-color) !important;
+}
+
+.markdown-body pre {
+  padding: 0 !important;
 }

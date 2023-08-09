@@ -53,12 +53,12 @@ export default function PageContent({ activeId }: { activeId: string }) {
         return () => setLoading(true);
     }, [activeId, gameViewArr, setLoading])
 
-    return <div className="relative">
-        <div className={ (!loading && isString) ? "relative w-full markdown-body global-header" : "absolute invisible -z-10"}
+    return <div className="relative w-full flex justify-center">
+        <div className={ (!loading && isString) ? "relative w-full markdown-body" : "absolute invisible -z-10"}
             dangerouslySetInnerHTML={{ __html: Content as string }}>
         </div>
 
-        <div className={ (!loading && !isString) ? "relative" : "absolute invisible -z-10" }>
+        <div className={ (!loading && !isString) ? "relative w-fit" : "absolute invisible -z-10" }>
             {Content as ReactNode}
         </div>
 

@@ -4,11 +4,11 @@ import { Loading } from "@/components/loading"
 import dynamic from "next/dynamic"
 import "@/app/global.css";
 import { useState } from "react";
-import "github-markdown-css/github-markdown-light.css";
+import "github-markdown-css/github-markdown.css";
 import "highlight.js/styles/github.css";
 
 // export const metadata = {
-//   title: 'Programming Journey',
+//   title: 'Programming Journal',
 //   description: 'crazy thoughts',
 // }
 
@@ -40,7 +40,7 @@ export default function RootLayout({
     <html lang="en">
       <head>
         <meta charSet="utf-8" />
-        <title>Programming Journey</title>
+        <title>Programming Journal</title>
         <meta name="description" content="crazy thoughts" />
       </head>
       <body>
