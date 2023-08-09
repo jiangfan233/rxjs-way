@@ -15,7 +15,7 @@ module.exports = {
   experimental: {
     serverActions: true,
   },
-  distDir: "docs",
+  // distDir: "docs",
   reactStrictMode: false,
   output: "standalone",
   compiler: {
