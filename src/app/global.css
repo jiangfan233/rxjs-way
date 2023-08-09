@@ -74,7 +74,7 @@ body::-webkit-scrollbar {
   }
 
   .custom-scheme {
-    background-color: var(--light-scheme-comp-color);
+    background-color: var(--dark-scheme-comp-color);
     color: var(--light-scheme-text-color);
   }
 
