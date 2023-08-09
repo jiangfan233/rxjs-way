@@ -2,7 +2,7 @@
 
 import { Loading } from "@/components/loading";
 import dynamic from "next/dynamic";
-import { ComponentType, useEffect, useMemo, useState } from "react"
+import { ComponentType, ReactNode, useEffect, useMemo, useState } from "react"
 
 
 const tetrisView = dynamic(() => import("@/games/tetris/view"), {
@@ -27,13 +27,16 @@ export default function PageContent({ activeId }: { activeId: string }) {
     );
 
     const [Content, setContent] = useState<string | ComponentType>("");
+    const [loading, setLoading] = useState(true);
+
+    const isString = useMemo(() => Object.prototype.toString.call(Content).includes("String"), [Content]);
 
     useEffect(() => {
-        console.log(activeId)
         const getContent = async (activeId: string) => {
             const gameView = gameViewArr.find(({ key }) => key === activeId);
             if (gameView) {
                 setContent(gameView.comp);
+                setLoading(false);
                 return;
             }
 
@@ -43,15 +46,24 @@ export default function PageContent({ activeId }: { activeId: string }) {
                 })
             const { data, code } = await res.json();
             setContent(data.content);
+            setLoading(false);
         }
         getContent(activeId);
-    }, [activeId, gameViewArr])
 
-    return <>
-        {Object.prototype.toString.call(Content).includes("String")
-            ? <div className="w-full markdown-body global-header"
-                dangerouslySetInnerHTML={{ __html: Content as string }}>
-            </div>
-            : Content}
-    </>
+        return () => setLoading(true);
+    }, [activeId, gameViewArr, setLoading])
+
+    return <div className="relative">
+        <div className={ (!loading && isString) ? "relative w-full markdown-body global-header" : "absolute invisible -z-10"}
+            dangerouslySetInnerHTML={{ __html: Content as string }}>
+        </div>
+
+        <div className={ (!loading && !isString) ? "relative" : "absolute invisible -z-10" }>
+            {Content as ReactNode}
+        </div>
+
+        <div className={ loading ? "relative" : "absolute invisible -z-10" }>
+            <Loading size="4rem" />
+        </div>        
+    </div>
 }
