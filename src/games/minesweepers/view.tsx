@@ -184,7 +184,7 @@ export default function MineSweeperView() {
   return (
     <div
       key="mineSweeper"
-      className="game-container custom-scheme flex flex-col"
+      className="game-container flex flex-col"
     >
       <div
         key="mineSweeper-header"
@@ -199,7 +199,7 @@ export default function MineSweeperView() {
         key="mineSweeper-container"
         onMouseDown={handleMouseDown}
         onMouseUp={handleMouseUp}
-        className="mineSweeper-container cursor-pointer"
+        className="mineSweeper-container custom-scheme cursor-pointer"
       >
         {mineSweeper.iterPosition().map((maybeMine) => (
           <MemoBlockView
