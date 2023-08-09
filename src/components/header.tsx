@@ -22,7 +22,6 @@ const Header = React.memo(({ isShowMenu, toggleMenu }: { isShowMenu: boolean, to
         <a href="https://github.com/jiangfan233/rxjs-way" target="_blank">
           <AiOutlineGithub size={"1.5rem"} />
         </a>
-        <Link className="self-end" href="/game" ><AiOutlineBuild size={"1.5rem"} /></Link>
       </div>
     </div>
   );

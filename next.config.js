@@ -12,12 +12,12 @@ if (isGithubActions) {
 
 /** @type {import('next').NextConfig} */
 module.exports = {
-  experimental: {
-    serverActions: true,
-  },
+  // experimental: {
+  //   serverActions: true,
+  // },
   // distDir: "docs",
   reactStrictMode: false,
-  output: "standalone",
+  // output: "standalone",
   compiler: {
     removeConsole: isProd
   }

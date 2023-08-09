@@ -105,7 +105,7 @@ const Sider: React.FC<SiderProps> = React.memo(({ isShowMenu, toggleMenu, handle
       }
     }
     getData();
-  }, [menuArray])
+  }, [])
 
   return (
     <div
