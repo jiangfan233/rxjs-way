@@ -53,7 +53,7 @@ export default function RootLayout({
             activeId={activeId}
             handleIdChange={handleIdChange}
           />
-          <div className="grow flex flex-col gap-2 items-center max-w-[60vw]">
+          <div className="grow flex flex-col gap-2 items-center w-full xl:max-w-[60vw]">
             <DynamicHeader 
               isShowMenu={isShowMenu} 
               toggleMenu={toggleMenu}

@@ -17,9 +17,12 @@ type MenuItemProps = FileStructure & {
 };
 
 const MenuItem = ({ label, id: path, subMenus, activeId }: MenuItemProps) => (
-  <li className="ml-3 whitespace-nowrap list-inside">
-    <span className={(path === activeId ? " text-lg font-semibold text-orange-500" : "text-base") + " cursor-pointer"} id={path}>{label}</span>
-    {subMenus ? (
+  <li className="ml-3 list-inside">
+    <span className={(path === activeId 
+      ? " text-lg font-semibold text-orange-500" 
+      : "text-base") 
+      + " cursor-pointer sm:whitespace-break-spaces"} id={path}>{label}</span>
+    {subMenus ? ( 
       <ol className="list-disc">
         {subMenus.map(
           ({ label: childLabel, id: childPath, subMenus: childChildren }) => (
@@ -61,7 +64,7 @@ const Sider: React.FC<SiderProps> = React.memo(({ isShowMenu, toggleMenu, handle
     {menuArray.map(({ label, id, subMenus: menuItems }) =>
       <div key={id}>
         <p className="mb-1">{label}</p>
-        {menuItems ? <ul key={id} className={" mb-3 global-sider rounded-md pr-4"}>
+        {menuItems ? <ul key={id} className={" mb-3 global-sider rounded-md md:pr-4 sm:whitespace-pre md:whitespace-nowrap "}>
           {menuItems.map(({ label, id, subMenus }) => (
             <MenuItem key={id + label} label={label} id={id} subMenus={subMenus} activeId={activeId} />
           ))}
@@ -79,11 +82,11 @@ const Sider: React.FC<SiderProps> = React.memo(({ isShowMenu, toggleMenu, handle
   useEffect(() => {
     if (isShowMenu == false) return;
     const [listenClickOutside, stopListen] = clickOutside();
-    if (document.documentElement.clientWidth <= 500) {
+    if (document.documentElement.clientWidth <= 640) {
       listenClickOutside();
     }
     const cancel = handleScreenResize(() => {
-      if (document.documentElement.clientWidth <= 500) {
+      if (document.documentElement.clientWidth <= 640) {
         listenClickOutside();
       } else {
         stopListen();
@@ -113,16 +116,16 @@ const Sider: React.FC<SiderProps> = React.memo(({ isShowMenu, toggleMenu, handle
       onClick={(e) => {
         e.stopPropagation();
         // @ts-ignore
-        if(e.target.id !== undefined && e.target.id != "") {
+        if (e.target.id !== undefined && e.target.id != "") {
           // @ts-ignore
           handleIdChange(e.target.id);
 
         }
       }}
       className={(isShowMenu
-        ? "max-h-[100vh] overflow-scroll"
+        ? " fixed max-h-[100vh] filter overflow-scroll left-0 top-0 z-20 sm:relative sm:max-w-[40vw]"
         : "absolute -z-10 opacity-0 max-h-0")
-        + " w-fit min-w-[20rem] pr-1 transition-all duration-300 rounded-md select-none overflow-hidden list-disc"}
+        + "  w-fit pr-1 transition-all duration-300 rounded-md select-none overflow-hidden list-disc"}
     >
 
       {memoMenuItems}
