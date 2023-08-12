@@ -6,13 +6,16 @@ import { ComponentType, ReactNode, useEffect, useMemo, useState } from "react"
 
 
 const tetrisView = dynamic(() => import("@/games/tetris/view"), {
-    loading: () => <Loading size="4rem" />
+    loading: () => <Loading size="4rem" />,
+    ssr: true
 });
 const snakeView = dynamic(() => import("@/games/snake/view"), {
-    loading: () => <Loading size="4rem" />
+    loading: () => <Loading size="4rem" />,
+    ssr: true
 });
 const mineSweeperView = dynamic(() => import("@/games/minesweepers/view"), {
-    loading: () => <Loading size="4rem" />
+    loading: () => <Loading size="4rem" />,
+    ssr: true
 });
 
 export default function PageContent({ activeId }: { activeId: string }) {
@@ -43,6 +46,7 @@ export default function PageContent({ activeId }: { activeId: string }) {
             const res = await fetch(`/api?id=${activeId}`,
                 {
                     method: "POST",
+                    cache: "force-cache"
                 })
             const { data, code } = await res.json();
             setContent(data.content);

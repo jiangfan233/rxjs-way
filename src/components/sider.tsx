@@ -18,11 +18,11 @@ type MenuItemProps = FileStructure & {
 
 const MenuItem = ({ label, id: path, subMenus, activeId }: MenuItemProps) => (
   <li className="ml-3 list-inside">
-    <span className={(path === activeId 
-      ? " text-lg font-semibold text-orange-500" 
-      : "text-base") 
+    <span className={(path === activeId
+      ? " text-lg font-semibold text-orange-500"
+      : "text-base")
       + " cursor-pointer sm:whitespace-break-spaces"} id={path}>{label}</span>
-    {subMenus ? ( 
+    {subMenus ? (
       <ol className="list-disc">
         {subMenus.map(
           ({ label: childLabel, id: childPath, subMenus: childChildren }) => (
@@ -62,13 +62,13 @@ const Sider: React.FC<SiderProps> = React.memo(({ isShowMenu, toggleMenu, handle
 
   const memoMenuItems = useMemo(() => <>
     {menuArray.map(({ label, id, subMenus: menuItems }) =>
-      <div key={id}>
+      <div key={id} className="mb-3">
         <p className="mb-1">{label}</p>
-        {menuItems ? <ul key={id} className={" mb-3 global-sider rounded-md md:pr-4 sm:whitespace-pre md:whitespace-nowrap "}>
-          {menuItems.map(({ label, id, subMenus }) => (
+        <ul key={id} className={"pb-2 pr-2 global-sider rounded-md sm:whitespace-pre md:whitespace-nowrap "}>
+          {menuItems ? menuItems.map(({ label, id, subMenus }) => (
             <MenuItem key={id + label} label={label} id={id} subMenus={subMenus} activeId={activeId} />
-          ))}
-        </ul> : null}
+          )) : null}
+        </ul>
       </div>
     )}
   </>, [menuArray, activeId]);
@@ -101,7 +101,7 @@ const Sider: React.FC<SiderProps> = React.memo(({ isShowMenu, toggleMenu, handle
 
   useEffect(() => {
     const getData = async () => {
-      const res = await fetch("/api");
+      const res = await fetch("/api", { cache: "force-cache" });
       const { code, data } = await res.json();
       if (code == 200) {
         setMenuArray(items => [{ label: "Reading & Doing", id: "Reading & Doing", subMenus: data }, ...items]);
@@ -123,9 +123,9 @@ const Sider: React.FC<SiderProps> = React.memo(({ isShowMenu, toggleMenu, handle
         }
       }}
       className={(isShowMenu
-        ? " fixed max-h-[100vh] filter overflow-scroll left-0 top-0 z-20 sm:relative sm:max-w-[40vw]"
-        : "absolute -z-10 opacity-0 max-h-0")
-        + "  w-fit pr-1 transition-all duration-300 rounded-md select-none overflow-hidden list-disc"}
+        ? " fixed text-base max-h-[calc(100vh-1rem)] overflow-x-hidden overflow-y-scroll left-0 top-0 z-20 pr-1 sm:relative sm:max-w-[40vw] sm:min-w-[30vw] md:max-w-[40vw] xl:max-w-[20vw] xl:min-w-[15vw]"
+        : " -translate-x-full text-[0.2rem] max-w-[0] -z-10 left-0 top-0 opacity-0 max-h-0")
+        + "  w-fit transition-all duration-300 rounded-md select-none overflow-hidden list-disc"}
     >
 
       {memoMenuItems}

@@ -58,14 +58,16 @@ async function fetchAndCache(request, preloadResponsePromise) {
       console.log(err);
     }
   }
+  const response = await fetchWIthTimeout(request, {}, 3000);
   try {
-    const response = await fetchWIthTimeout(request, {}, 3000);
-    putInCache(request, response.clone(), VERSION);
-    return response;
+    if(response.ok) {
+      putInCache(request, response.clone(), VERSION);
+      return response;
+    }
   } catch (err) {
     console.warn(err);
+    return new Response({ url: "/404" });
   }
-  return new Response("Sorry, the page is gone...");
 }
 
 /**
@@ -96,7 +98,7 @@ async function fetchWIthTimeout(url, options = {}, ms) {
     }
   }, ms);
   const res = await fetch(url, { ...options, signal: ctrl.signal });
-  if (res.status == 200) clearTimeout(id);
+  clearTimeout(id);
   return res;
 }
 

@@ -14,16 +14,18 @@ import "highlight.js/styles/github.css";
 
 
 const DynamicHeader = dynamic(() => import("@/components/header"), {
-  loading: () => <Loading size={"2rem"} />
+  loading: () => <Loading size={"2rem"} />,
+  ssr: true,
 })
 
 const DynamicSider = dynamic(() => import("@/components/sider"), {
-  loading: () => <Loading size={"4rem"} />
+  loading: () => <Loading size={"4rem"} />,
+  ssr: true,
 })
 
 const DynamicContent = dynamic(() => import("@/components/page"), {
   loading: () => <Loading size={"2rem"} />,
-  ssr: false
+  ssr: true
 })
 
 export default function RootLayout({
@@ -45,17 +47,17 @@ export default function RootLayout({
       </head>
       <body>
         <div
-          className="flex gap-2 items-start justify-center m-2"
+          className={(isShowMenu ? "gap-2" : "") + " flex items-start justify-center m-2"}
         >
-          <DynamicSider 
-            isShowMenu={isShowMenu} 
-            toggleMenu={toggleMenu} 
+          <DynamicSider
+            isShowMenu={isShowMenu}
+            toggleMenu={toggleMenu}
             activeId={activeId}
             handleIdChange={handleIdChange}
           />
           <div className="grow flex flex-col gap-2 items-center w-full xl:max-w-[60vw]">
-            <DynamicHeader 
-              isShowMenu={isShowMenu} 
+            <DynamicHeader
+              isShowMenu={isShowMenu}
               toggleMenu={toggleMenu}
             />
             <DynamicContent activeId={activeId} />
