@@ -14,13 +14,13 @@ const MemoBlock = React.memo(
   }) => {
     return (
       <div
-        className="flex justify-center items-center border-[1px] p-1 border-solid border-[#40402d]"
+        className='flex justify-center items-center border-[1px] p-1 border-solid border-[#40402d]'
         key={`${x}-${y}`}
       >
         {colorShape}
       </div>
     );
-  }
+  },
 );
 
 MemoBlock.displayName = "MemoBlock";
@@ -51,16 +51,15 @@ export default function TetrisView() {
 
       setTetris(tetris.clone());
     },
-    [tetris, setSpeed, setTetris]
+    [tetris, setSpeed, setTetris],
   );
 
   const memoHandleKeyUp = useCallback(function (
     this: Document,
-    _: globalThis.KeyboardEvent
+    _: globalThis.KeyboardEvent,
   ): void {
     setSpeed(500);
-  },
-  []);
+  }, []);
 
   useEffect(() => {
     document.addEventListener("keydown", memoHandleKeyDown);
@@ -82,7 +81,7 @@ export default function TetrisView() {
   }, [setTetris, speed]);
 
   return (
-    <div className="game-container tetris-container custom-scheme">
+    <div className='game-container tetris-container custom-scheme'>
       {Array(tetris.height)
         .fill(null)
         .flatMap((_, y) =>
@@ -95,7 +94,7 @@ export default function TetrisView() {
                 y={y}
                 colorShape={tetris.getTyp(Pos.new(x, y))}
               />
-            ))
+            )),
         )}
 
       <style jsx>{`

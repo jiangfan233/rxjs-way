@@ -18,7 +18,7 @@ I want to know the mininum steps of changing A[0, i) into B[0, j)：
 
 ```javascript
 steps{A[0, i) -> B[0, j)}
-``` 
+```
 
 Why do I use i and j?
 
@@ -71,7 +71,7 @@ let 's recall our first expression:
 
 ```javascript
 steps{A[0, i) -> B[0, j)}
-``` 
+```
 
 This expression means the mininum number of steps of changing A[0, i) into B[0, j). In this expression, we got two variables, i and j. Why don't we make i to be a constant number such as 0 to see what we can get(**controlled variable method**)?
 
@@ -85,8 +85,8 @@ Things get interesting, what if we make i equal to 1?
 
 ```javascript
 let i = 1;
-A[0, 1).length == 1;                   // We only know the length!   
-steps{ A[0, 1) -> B[0, j) } == Math.abs(j - 1)   // what's the hell ? 
+A[0, 1).length == 1;                   // We only know the length!
+steps{ A[0, 1) -> B[0, j) } == Math.abs(j - 1)   // what's the hell ?
 
 // delete a char of A[0, 1)
 steps{ A[0, 1) -> B[0, 0) } == steps{ A[0, 1) -> "" } == 1;
@@ -105,14 +105,14 @@ function minDistance(word1: string, word2: string): number {
   let l1 = word1.length + 1;
   let l2 = word2.length + 1;
 
-  // i use dp[r][c] to represent the F(i, j) 
+  // i use dp[r][c] to represent the F(i, j)
   // rows
   let dp = Array(l1)
     .fill(0)
     // cols
     .map((_) => Array(l2).fill(0));
 
-  // calcate some initial values.  
+  // calcate some initial values.
   for (let r = 1; r < l1; r++) {
     dp[r][0] = r;
   }
@@ -132,5 +132,4 @@ function minDistance(word1: string, word2: string): number {
 
   return dp[word1.length][word2.length];
 }
-
 ```

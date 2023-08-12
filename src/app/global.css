@@ -14,7 +14,6 @@
   --light-scheme-text-color: rgb(22, 22, 22);
 }
 
-
 * {
   padding: 0;
   margin: 0;
@@ -91,7 +90,6 @@ body::-webkit-scrollbar {
     background-color: var(--light-scheme-bg-color) !important;
     color: var(--light-scheme-text-color) !important;
   } */
-
 }
 
 .markdown-body {
@@ -107,7 +105,6 @@ body::-webkit-scrollbar {
   display: flex;
   justify-content: space-between;
 }
-
 
 .markdown-body ul {
   list-style: disc;

@@ -30,49 +30,49 @@ export class Shape implements ShapeType {
         return new Shape(
           "🟥",
           new Set([pos(0, 0), pos(1, 0), pos(2, 0), pos(3, 0)]),
-          pos(1, 0)
+          pos(1, 0),
         );
       case 1:
         // o
         return new Shape(
           "🟧",
           new Set([pos(0, 0), pos(1, 0), pos(0, 1), pos(1, 1)]),
-          pos(1, 0)
+          pos(1, 0),
         );
       case 2:
         // j
         return new Shape(
           "🎃",
           new Set([pos(1, 0), pos(1, 1), pos(1, 2), pos(0, 2)]),
-          pos(1, 1)
+          pos(1, 1),
         );
       case 3:
         // l
         return new Shape(
           "🟩",
           new Set([pos(0, 0), pos(0, 1), pos(0, 2), pos(1, 2)]),
-          pos(0, 1)
+          pos(0, 1),
         );
       case 4:
         // s
         return new Shape(
           "🟦",
           new Set([pos(1, 0), pos(2, 0), pos(1, 1), pos(0, 1)]),
-          pos(1, 0)
+          pos(1, 0),
         );
       case 5:
         // z
         return new Shape(
           "🟪",
           new Set([pos(0, 0), pos(1, 0), pos(1, 1), pos(2, 1)]),
-          pos(1, 0)
+          pos(1, 0),
         );
       case 6:
         // t
         return new Shape(
           "🟫",
           new Set([pos(0, 0), pos(1, 0), pos(2, 0), pos(1, 1)]),
-          pos(1, 0)
+          pos(1, 0),
         );
       default:
         console.warn("shape number out of range: ", idx);
@@ -81,15 +81,15 @@ export class Shape implements ShapeType {
 
   get(pos: Pos): Pos | undefined {
     return Array.from(this.positions).find(
-      (p) => p.x === pos.x && p.y === pos.y
+      (p) => p.x === pos.x && p.y === pos.y,
     );
   }
 
   isColliding(posArray: Pos[]): boolean {
     return posArray.some((otherPos) =>
       Array.from(this.positions).some(
-        (p) => otherPos.x === p.x && otherPos.y === p.y
-      )
+        (p) => otherPos.x === p.x && otherPos.y === p.y,
+      ),
     );
   }
 
@@ -99,10 +99,10 @@ export class Shape implements ShapeType {
       typ,
       new Set(
         Array.from(this.positions).map((pos) =>
-          Pos.new(pos.x + otherPos.x, pos.y + otherPos.y)
-        )
+          Pos.new(pos.x + otherPos.x, pos.y + otherPos.y),
+        ),
       ),
-      Pos.new(anchor.x + otherPos.x, anchor.y + otherPos.y)
+      Pos.new(anchor.x + otherPos.x, anchor.y + otherPos.y),
     );
   }
 
@@ -117,7 +117,7 @@ export class Shape implements ShapeType {
             // consider the gravity
             return pos.add(Pos.new(0, 1));
           }
-        })
+        }),
     );
   }
 
@@ -128,10 +128,10 @@ export class Shape implements ShapeType {
       typ,
       new Set(
         Array.from(this.positions).map((pos) =>
-          Pos.new(-pos.y + b + a, pos.x - a + b)
-        )
+          Pos.new(-pos.y + b + a, pos.x - a + b),
+        ),
       ),
-      anchor
+      anchor,
     );
   }
 }

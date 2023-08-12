@@ -10,21 +10,23 @@ import img from "@pulic/a.webp";
 import imgBak from "@public/a.png";
 
 const Page = () => {
-    const [image, setImage] = useState(img);
+  const [image, setImage] = useState(img);
 
-    return <>
-        <Image 
-            src={image} 
-            alt={"image"}
-            // tailwindcss
-            class="object-fit object-center h-auto"
-            style={{ width:"200px", height: "200px" }}
-            width={200}
-            height={150}
-            onError={e => setImage(imgBak)}
-        />
+  return (
+    <>
+      <Image
+        src={image}
+        alt={"image"}
+        // tailwindcss
+        class='object-fit object-center h-auto'
+        style={{ width: "200px", height: "200px" }}
+        width={200}
+        height={150}
+        onError={(e) => setImage(imgBak)}
+      />
     </>
-}
+  );
+};
 ```
 
 not finished ...

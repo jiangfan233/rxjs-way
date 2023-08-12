@@ -12,13 +12,13 @@ export const requestNotifyPermission = async () => {
 
 export const registerNewSw = async (
   scriptURL: string | URL,
-  options?: RegistrationOptions | undefined
+  options?: RegistrationOptions | undefined,
 ) => {
   if (!existServiceWorker()) return;
   try {
     const registration = await navigator.serviceWorker.register(
       scriptURL,
-      options
+      options,
     );
     return registration;
   } catch (err) {
@@ -41,27 +41,26 @@ export const keepServiceWorker = (serviceWorker: ServiceWorker) => {
 
 export const getRegistration = async (scope: string) => {
   let registration: ServiceWorkerRegistration | undefined;
-  try{
+  try {
     registration = await navigator.serviceWorker.getRegistration(scope);
-    if(registration) return { registration, status: "active" };
+    if (registration) return { registration, status: "active" };
     registration = await registerNewSw(isProd() ? "./sw.js" : "/sw.js");
     return { registration, status: "installing" };
-  }catch(err) {
+  } catch (err) {
     console.error("get service worker registration error:", err);
   }
-  
+
   return {};
 };
 
-export const getRegistrations = async() => {
-  try{
+export const getRegistrations = async () => {
+  try {
     return await navigator.serviceWorker.getRegistrations();
-  } catch(err) {
+  } catch (err) {
     console.error("get service worker registrations error: ", err);
   }
-}
+};
 
 export async function removeAllCaches() {
-  caches.keys().then(keys => keys.forEach(key => caches.delete(key)));
+  caches.keys().then((keys) => keys.forEach((key) => caches.delete(key)));
 }
-

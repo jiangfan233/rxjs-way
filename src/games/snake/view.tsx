@@ -14,14 +14,11 @@ const MemoBlock = React.memo(
     colorShape: string | null;
   }) => {
     return (
-      <div
-        className="flex justify-center items-center"
-        key={`${x}-${y}`}
-      >
+      <div className='flex justify-center items-center' key={`${x}-${y}`}>
         {colorShape}
       </div>
     );
-  }
+  },
 );
 
 MemoBlock.displayName = "MemoBlock";
@@ -55,7 +52,7 @@ export default function SnakeView() {
 
       res && setGameBoard(gameboard.clone());
     },
-    [gameboard, setGameBoard, setDirection]
+    [gameboard, setGameBoard, setDirection],
   );
 
   useEffect(() => {
@@ -74,9 +71,7 @@ export default function SnakeView() {
   }, [direction, gameboard, setGameBoard]);
 
   return (
-    <div
-      className="game-container snake-container custom-scheme"
-    >
+    <div className='game-container snake-container custom-scheme'>
       {Array(gameboard.height)
         .fill(null)
         .flatMap((_, y) =>
@@ -89,7 +84,7 @@ export default function SnakeView() {
                 y={y}
                 colorShape={gameboard.getPosition(Pos.new(x, y))}
               />
-            ))
+            )),
         )}
 
       <style jsx>{`

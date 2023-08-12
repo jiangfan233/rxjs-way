@@ -79,4 +79,3 @@ jobs:
         run: ${{ steps.detect-package-manager.outputs.runner }} next export
       - name: Check Directory Structure
         run: echo ${{ github.workspace }} && cd ./docs && tree
-        

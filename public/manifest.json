@@ -1,22 +1,22 @@
 {
-  "name"              : "The Rxjs Way",
-  "short_name"        : "Rxjs-Way",
-  "description"       : "",
-  "start_url"         : "/rxjs-way",
-  "display"           : "standalone",
-  "orientation"       : "any",
-  "background_color"  : "#ACE",
-  "theme_color"       : "#ACE",
+  "name": "The Rxjs Way",
+  "short_name": "Rxjs-Way",
+  "description": "",
+  "start_url": "/rxjs-way",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#ACE",
+  "theme_color": "#ACE",
   "icons": [
     {
-      "src"           : "./logo-72.webp",
-      "sizes"         : "72x72",
-      "type"          : "image/webp"
+      "src": "./logo-72.webp",
+      "sizes": "72x72",
+      "type": "image/webp"
     },
     {
-      "src"           : "./logo-144.webp",
-      "sizes"         : "144x144",
-      "type"          : "image/webp"
+      "src": "./logo-144.webp",
+      "sizes": "144x144",
+      "type": "image/webp"
     }
   ]
 }

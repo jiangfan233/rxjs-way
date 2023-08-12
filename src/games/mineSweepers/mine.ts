@@ -17,7 +17,15 @@ export class MaybeMine extends Pos implements MaybeMineInf {
   value: number;
   isClickError: boolean;
 
-  constructor(x: number, y: number, color: string | null, isShow: Boolean, isMarked: boolean, value: number, isClickError: boolean) {
+  constructor(
+    x: number,
+    y: number,
+    color: string | null,
+    isShow: Boolean,
+    isMarked: boolean,
+    value: number,
+    isClickError: boolean,
+  ) {
     super(x, y);
     this.isShow = isShow;
     this.color = color;
@@ -26,20 +34,36 @@ export class MaybeMine extends Pos implements MaybeMineInf {
     this.isClickError = isClickError;
   }
 
-  static mine(x: number, y: number, color = "💣", isShow = false, isMarked=false, value=-1, isClickError=false): MaybeMine {
+  static mine(
+    x: number,
+    y: number,
+    color = "💣",
+    isShow = false,
+    isMarked = false,
+    value = -1,
+    isClickError = false,
+  ): MaybeMine {
     return new MaybeMine(x, y, color, isShow, isMarked, value, isClickError);
   }
 
-  static grass(x: number, y: number, color = null, isShow = false, isMarked=false, value=0, isClickError=false) :MaybeMine {
+  static grass(
+    x: number,
+    y: number,
+    color = null,
+    isShow = false,
+    isMarked = false,
+    value = 0,
+    isClickError = false,
+  ): MaybeMine {
     return new MaybeMine(x, y, color, isShow, isMarked, value, isClickError);
   }
 
-  isMine() :boolean {
+  isMine(): boolean {
     return this.value < 0;
   }
 
   mark() {
-    if(this.isShow) return;
+    if (this.isShow) return;
     this.isMarked = !this.isMarked;
   }
 
@@ -60,15 +84,15 @@ export class MaybeMine extends Pos implements MaybeMineInf {
 
   toView() {
     const { isShow, color, value, isMarked } = this;
-    if(isMarked) return "🚩";
+    if (isMarked) return "🚩";
     if (isShow) {
       return this.isMine() ? color : value || null;
     } else {
       return null;
     }
   }
-  
-  isMarkError() :boolean {
+
+  isMarkError(): boolean {
     const { isMarked } = this;
     return isMarked && !this.isMine();
   }

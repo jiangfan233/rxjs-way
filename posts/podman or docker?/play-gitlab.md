@@ -21,7 +21,7 @@ export GITLAB_HOME=~/gitlab
 ```bash
 # this image is about 3G, it's gonna take a while.
 podman pull docker.io/gitlab
-``` 
+```
 
 - 2、Copy files of the container.(<b>Do not modify permissions!</b>)
 
@@ -86,12 +86,12 @@ podman exec -it gitlab gitlab-ctl status
 mkdir -p ~/.config/systemd/user
 cd ~/.config/systemd/user
 
-# -f, --files   Generate .service files instead of printing to stdout 
+# -f, --files   Generate .service files instead of printing to stdout
 # -n, --name    Use container/pod names instead of IDs
 podman generate systemd -f -n gitlab
 
 # there should be a file called "container.gitlab.service"
-ls -al | gitlab 
+ls -al | gitlab
 
 # make sure this service would start automatically after reboot.
 systemctl --user enable container-essearch-ui.service --now
@@ -99,4 +99,3 @@ systemctl --user enable container-essearch-ui.service --now
 # make sure this service would not stop after the current user log out.
 loginctl enable-linger
 ```
-

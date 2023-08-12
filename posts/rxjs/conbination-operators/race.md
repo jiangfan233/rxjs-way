@@ -43,7 +43,7 @@ const fakeRace = (...rest: Observable<any>[]): Observable<any> => {
 
 // const subscription = fakeRace(
 // // race(
-//     source1$, 
+//     source1$,
 //     source2$
 // ).subscribe(console.log);
 

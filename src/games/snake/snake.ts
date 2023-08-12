@@ -25,7 +25,7 @@ export class Snake implements SnakeInf {
   headColor: string;
   color: string;
 
-  constructor(positions: Set<Pos>, headColor: string, color: string="🟥") {
+  constructor(positions: Set<Pos>, headColor: string, color: string = "🟥") {
     this.positions = positions;
     this.headColor = headColor;
     this.color = color;
@@ -62,7 +62,7 @@ export class Snake implements SnakeInf {
 
     let next = this.getHead().add(rhs);
 
-    if(this.isNeck(next)) {
+    if (this.isNeck(next)) {
       return AfterMove.Neck;
     }
 
@@ -88,8 +88,8 @@ export class Snake implements SnakeInf {
   eatSelf(next: Pos): boolean {
     return !!this.iterPositions().find((pos) => pos.eq(next));
   }
-  
-  isNeck(next: Pos) :boolean {
+
+  isNeck(next: Pos): boolean {
     // the neck can not be eaten by itself.
     return this.iterPositions()[1].eq(next);
   }

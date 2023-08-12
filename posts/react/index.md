@@ -4,7 +4,6 @@
 
 I think the answer depends on whether the effect being executed is the latest version or not.
 
-
 Let's see some code:
 
 ```typescript
@@ -15,7 +14,7 @@ type State<T> = {
 
 type SetState<T> = (newVal: T) => void;
 
-const useState = <T>(val: T): [State<T>, SetState<T>] => {
+const useState = <T,>(val: T): [State<T>, SetState<T>] => {
   let state: State<T> = {
     val,
     effects: new Set(),
@@ -35,13 +34,11 @@ const useEffect = (f: Function, deps: State<any>[]) => {
   // run effect at program starting.
   f.call(null);
 };
-
 ```
 
 We can test our codes in this way:
 
 ```typescript
-
 const [name1, setName1] = useState("name111111");
 const [name2, setName2] = useState("name222222");
 const [showAll, toggleShowAll] = useState(false);
@@ -50,7 +47,7 @@ useEffect(
   // This effect would be executed once after the program started.
   // a log would show up with name2' value.
   () => console.log(showAll.val ? name1.val : name2.val),
-  [name1, name2, showAll]
+  [name1, name2, showAll],
 );
 
 // this will triger a log which still shows the value of the name2, but we are using name1 !!
@@ -65,14 +62,13 @@ At this version, i use a State object to hold the state value and the effects(su
 
 If you run there codes, there would be some inconsistents cannot be easily ignored.
 
-We set the value of showAll to be true, so the result of the effect would have nothing to do with name2, that means no matter what we change the value of name2, there should be no more logs, but it is. 
+We set the value of showAll to be true, so the result of the effect would have nothing to do with name2, that means no matter what we change the value of name2, there should be no more logs, but it is.
 
 If you thought about these codes deeply, you would know <b>i should update my effect everytime before it being executed.</b>
 
 Here are the "corrected" codes:
 
 ```typescript
-
 type Getter<T> = () => T;
 type Setter<T> = (newVal: T) => void;
 type Effect = {
@@ -87,7 +83,7 @@ const connect = (subs: Set<Effect>, effect: Effect) => {
   effect.deps.add(subs);
 };
 
-const useState = <T>(val: T): [Getter<T>, Setter<T>] => {
+const useState = <T,>(val: T): [Getter<T>, Setter<T>] => {
   const subs = new Set<Effect>();
 
   const get: Getter<T> = () => {
@@ -124,14 +120,10 @@ const useEffect = (cb: Function) => {
   cb.call(null);
   effectArray.pop();
 };
-
-
 ```
 
 At this version, i remove the argument called deps in both useState and useEffect, and i change the value of the state to be a Getter function, which i can hold every effect that using the state. <b>Every effect must remove its previous version from all of the dependencies in the state in order to ensure that the latest version is executed.</b>
 
 Thanks for reading.
-
-
 
 Reference:《React设计原理》(ISBN: 9787121444838)

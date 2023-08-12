@@ -17,7 +17,7 @@ export default class Tetris {
     this.failed = false;
 
     this.current_shape = Shape.shapeFactory(Math.floor(Math.random() * 7))!.add(
-      Pos.new(this.width / 2 - 1, 0)
+      Pos.new(this.width / 2 - 1, 0),
     );
   }
 
@@ -35,7 +35,7 @@ export default class Tetris {
     const newAnchor = Pos.new(anchor.x + this.width / 2 - 1, anchor.y);
 
     const newBlocks = new Set(
-      Array.from(positions).map((p) => Pos.new(p.x + this.width / 2 - 1, p.y))
+      Array.from(positions).map((p) => Pos.new(p.x + this.width / 2 - 1, p.y)),
     );
     return new Shape(typ, newBlocks, newAnchor);
   }
@@ -55,14 +55,14 @@ export default class Tetris {
     const posArray = Array.from(shape.positions);
     return !posArray.every(
       (pos) =>
-        pos.x >= 0 && pos.x < this.width && pos.y >= 0 && pos.y < this.height
+        pos.x >= 0 && pos.x < this.width && pos.y >= 0 && pos.y < this.height,
     );
   }
 
   isColliding(shape: Shape): boolean {
     const posArray = Array.from(shape.positions);
     return this.fixed_shapes.some((fixed_shape) =>
-      fixed_shape.isColliding(posArray)
+      fixed_shape.isColliding(posArray),
     );
   }
 
@@ -76,9 +76,8 @@ export default class Tetris {
       this.removeFullLines();
 
       this.current_shape = Shape.shapeFactory(
-        Math.floor(Math.random() * 7)
+        Math.floor(Math.random() * 7),
       )!.add(Pos.new(this.width / 2 - 1, 0));
-
 
       // can not move
       if (this.isColliding(this.current_shape)) {
@@ -117,21 +116,22 @@ export default class Tetris {
   }
 
   removeFullLines(): void {
-    Array(this.height).fill(null)
+    Array(this.height)
+      .fill(null)
       .forEach((_, y) => {
-      if (this.isLineFull(y)) {
-        this.fixed_shapes.forEach((shape) => {
-          shape.remove(y);
-        });
-      }
-    }); 
-
+        if (this.isLineFull(y)) {
+          this.fixed_shapes.forEach((shape) => {
+            shape.remove(y);
+          });
+        }
+      });
   }
 
   isLineFull(y: number) {
-    return this.fixed_shapes
-      .flatMap(shape => Array.from(shape.positions))
-      .filter(pos => pos.y === y)
-      .length === this.width
+    return (
+      this.fixed_shapes
+        .flatMap((shape) => Array.from(shape.positions))
+        .filter((pos) => pos.y === y).length === this.width
+    );
   }
 }

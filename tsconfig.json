@@ -1,12 +1,7 @@
 {
   "compilerOptions": {
     "target": "es5",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext",
-      "WebWorker"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext", "WebWorker"],
     "allowJs": true,
     "checkJs": true,
     "skipLibCheck": true,
@@ -29,12 +24,8 @@
       }
     ],
     "paths": {
-      "@/*": [
-        "./src/*"
-      ],
-      "@*": [
-        "./*"
-      ]
+      "@/*": ["./src/*"],
+      "@*": ["./*"]
     }
   },
   "include": [
@@ -42,10 +33,8 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "docs/types/**/*.ts", 
-    "public/*.js",
+    "docs/types/**/*.ts",
+    "public/*.js"
   ],
-  "exclude": [
-    "node_modules",
-  ]
+  "exclude": ["node_modules"]
 }

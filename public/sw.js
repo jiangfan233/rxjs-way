@@ -23,8 +23,8 @@ async function removeOldVersion() {
         keys.map((k) => {
           caches.delete(k);
           return k;
-        })
-      )
+        }),
+      ),
     );
 }
 
@@ -60,7 +60,7 @@ async function fetchAndCache(request, preloadResponsePromise) {
   }
   const response = await fetchWIthTimeout(request, {}, 3000);
   try {
-    if(response.ok) {
+    if (response.ok) {
       putInCache(request, response.clone(), VERSION);
       return response;
     }
@@ -91,9 +91,9 @@ async function getResponse(request, preloadResponsePromise) {
 async function fetchWIthTimeout(url, options = {}, ms) {
   const ctrl = new AbortController();
   const id = setTimeout(() => {
-    try{
+    try {
       ctrl.abort();
-    } catch(err) {
+    } catch (err) {
       console.log("abort fetch", err);
     }
   }, ms);
@@ -118,7 +118,7 @@ async function getWindowClients() {
  */
 function checkFocused(type = "schedule") {
   getWindowClients().then((clientList) => {
-    if(clientList.length > 0) clientList[0].postMessage("unfocus-" + type);
+    if (clientList.length > 0) clientList[0].postMessage("unfocus-" + type);
     // clientList.forEach((client) => {
     //   if ("focus" in client && client.visibilityState === "hidden") {
     //     client.postMessage("unfocus-" + type);
@@ -175,7 +175,7 @@ sw.addEventListener("install", (e) => {
       const cache = await caches.open(VERSION);
       console.log("[Service Worker] Caching all: app shell and content");
       await cache.addAll(installFilesEssential);
-    })()
+    })(),
   );
 });
 
@@ -245,7 +245,8 @@ sw.addEventListener("notificationclick", (event) => {
           return client.focus();
         }
       }
-      if (event.action !== "close" && clients.openWindow) return clients.openWindow("/");
-    })
+      if (event.action !== "close" && clients.openWindow)
+        return clients.openWindow("/");
+    }),
   );
 });

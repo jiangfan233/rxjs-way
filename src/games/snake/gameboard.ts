@@ -10,7 +10,6 @@ export interface GameBoardInf {
   isFailed: boolean;
 }
 
-
 export class GameBoard implements GameBoardInf {
   width: number;
   height: number;
@@ -23,7 +22,7 @@ export class GameBoard implements GameBoardInf {
     height: number,
     snake: Snake,
     food: Food,
-    isFailed: boolean
+    isFailed: boolean,
   ) {
     this.width = width;
     this.height = height;
@@ -44,9 +43,9 @@ export class GameBoard implements GameBoardInf {
       Food.newFood(
         ~~(Math.random() * width),
         ~~(Math.random() * height),
-        ["🟥", "🟫", "🟪", "🟦", "🟩", "🟨", "🟧"][~~(Math.random() * 7)]
+        ["🟥", "🟫", "🟪", "🟦", "🟩", "🟨", "🟧"][~~(Math.random() * 7)],
       ),
-      false
+      false,
     );
   }
 
@@ -61,19 +60,20 @@ export class GameBoard implements GameBoardInf {
 
   refreshFood() {
     const { width, height } = this;
-    let makeFood = () => Food.newFood(
-      ~~(Math.random() * width),
-      ~~(Math.random() * height),
-      ["🟥", "🟫", "🟪", "🟦", "🟩", "🟨", "🟧"][~~(Math.random() * 7)]
-    );
+    let makeFood = () =>
+      Food.newFood(
+        ~~(Math.random() * width),
+        ~~(Math.random() * height),
+        ["🟥", "🟫", "🟪", "🟦", "🟩", "🟨", "🟧"][~~(Math.random() * 7)],
+      );
     let newFood = makeFood();
-    while( this.isSnake(newFood) ) {
+    while (this.isSnake(newFood)) {
       newFood = makeFood();
     }
     this.food = newFood;
   }
 
-  isIndBounds(direction: Direction) :boolean {
+  isIndBounds(direction: Direction): boolean {
     let rhs;
     switch (direction) {
       case Direction.Down: {
@@ -95,19 +95,21 @@ export class GameBoard implements GameBoardInf {
     }
 
     let next = this.snake.getHead().add(rhs);
-    return next.x >= 0 && next.x < this.width && next.y >= 0 && next.y < this.height;
+    return (
+      next.x >= 0 && next.x < this.width && next.y >= 0 && next.y < this.height
+    );
   }
 
   /**
-   * 
-   * @param direction 
-   * @returns Boolean  
+   *
+   * @param direction
+   * @returns Boolean
    */
   tryMove(direction: Direction): Boolean {
-    if(this.isFailed) return false;
-    if(!this.isIndBounds(direction)) {
-        this.isFailed = true;
-        return false;
+    if (this.isFailed) return false;
+    if (!this.isIndBounds(direction)) {
+      this.isFailed = true;
+      return false;
     }
     let afterMove = this.snake.move(direction, this.food);
     switch (afterMove) {
@@ -134,17 +136,16 @@ export class GameBoard implements GameBoardInf {
   }
 
   isSnake(pos: Pos): Boolean {
-    return this.snake.iterPositions().some( p => p.eq(pos));
+    return this.snake.iterPositions().some((p) => p.eq(pos));
   }
 
   getPosition(pos: Pos): string {
     const { snake, food } = this;
-    if( food.eq(pos) ) return food.food_color;
+    if (food.eq(pos)) return food.food_color;
     if (snake.getHead().eq(pos)) return snake.headColor;
     // set.has 不能用
     // if( snake.positions.has(pos) ) return snake.color;
-    if( this.isSnake(pos) ) return snake.color;
-    return ""; 
+    if (this.isSnake(pos)) return snake.color;
+    return "";
   }
-
 }

@@ -37,11 +37,11 @@ export class MineSweepers implements MineSpeeperType {
     height: number,
     status: Status,
     mineCount: number,
-    positions: MaybeMine[][]
+    positions: MaybeMine[][],
   ) {
     this.width = width;
     this.height = height;
-    this.status = status
+    this.status = status;
     this.mineCount = mineCount;
     this.positions = positions;
   }
@@ -52,7 +52,7 @@ export class MineSweepers implements MineSpeeperType {
       .map((_, y) =>
         Array(width)
           .fill(0)
-          .map((_, x) => MaybeMine.grass(x, y))
+          .map((_, x) => MaybeMine.grass(x, y)),
       );
     let count = 0;
     while (count < mineCount) {
@@ -66,7 +66,13 @@ export class MineSweepers implements MineSpeeperType {
       }
     }
 
-    return new MineSweepers(width, height, Status.Playing, mineCount, positions);
+    return new MineSweepers(
+      width,
+      height,
+      Status.Playing,
+      mineCount,
+      positions,
+    );
   }
 
   isMine(pos: Pos): Boolean {
@@ -127,7 +133,7 @@ export class MineSweepers implements MineSpeeperType {
   }
 
   scan(startPos: MaybeMine) {
-    if(startPos.isMarked) return;
+    if (startPos.isMarked) return;
     if (startPos.isMine()) {
       this.status = Status.Failed;
       startPos.isClickError = true;
@@ -198,13 +204,13 @@ export class MineSweepers implements MineSpeeperType {
   }
 
   allMine() {
-    return this.iterPosition().filter(p => p.isMine());
+    return this.iterPosition().filter((p) => p.isMine());
   }
 
   markedMineCount() {
-    let res = this.mineCount - this.iterPosition().filter(
-      (maybeMine) => maybeMine.isMarked
-    ).length;
+    let res =
+      this.mineCount -
+      this.iterPosition().filter((maybeMine) => maybeMine.isMarked).length;
     return res;
   }
 
@@ -212,17 +218,19 @@ export class MineSweepers implements MineSpeeperType {
     let cloned = maybeMine.clone();
     cloned.mark();
     this.setPosition(maybeMine, cloned);
-    if(this.markedMineCount() === 0 && this.allMine().every(mine => mine.isMarked)) {
+    if (
+      this.markedMineCount() === 0 &&
+      this.allMine().every((mine) => mine.isMarked)
+    ) {
       this.status = Status.Success;
     }
   }
 
-  isFailed() :boolean {
+  isFailed(): boolean {
     return this.status === Status.Failed;
   }
 
-  isSuccess() :boolean {
+  isSuccess(): boolean {
     return this.status === Status.Success;
   }
-
 }

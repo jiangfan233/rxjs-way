@@ -1,7 +1,9 @@
 ##### withLatestFrom 解决了 zip、combineLatest 中的多重继承问题（glitch）
+
 glitch 问题的根源在于多个 Observable 同时有数据到来时都会向下游吐出数据，因此会出现同一个时刻吐出多个数据的情况
 
 ###### withLatestFrom 解决方式：
+
 - 提供一个控制者 Observble 作为 Controller，其他 Observable 作为从属仅提供数据（不向下游提供数据）
 - controller 向下游吐出数据（因此也把 Subscription 提供给下游）
 - controller 自身有数据时会检查 从属者是否已经提供数据（而不管数据何时提供的）

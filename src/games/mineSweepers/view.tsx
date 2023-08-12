@@ -29,21 +29,21 @@ const MemoBlockView = React.memo(
     return (
       <div
         key={maybeMine.asKey()}
-        className="mine flex justify-center items-center p-[0.1rem]"
+        className='mine flex justify-center items-center p-[0.1rem]'
         onMouseDown={(_) => (blockRef.current = maybeMine)}
       >
         {maybeMine.toView()}
 
         <style jsx>{`
-            .mine {
-              border: 0.5px solid #40402d;
-              background-color: ${isShow
-            ? isClickError
-              ? "red"
-              : "#fffcfc"
-            : "inherit"};
-            }
-          `}</style>
+          .mine {
+            border: 0.5px solid #40402d;
+            background-color: ${isShow
+              ? isClickError
+                ? "red"
+                : "#fffcfc"
+              : "inherit"};
+          }
+        `}</style>
       </div>
     );
   },
@@ -64,11 +64,13 @@ const MemoBlockView = React.memo(
       nextValue === prevValue &&
       prevIsMarked === currIsMarked
     );
-  }
+  },
 );
 
 const MineCountView = React.memo(({ mineCount }: { mineCount: number }) => (
-  <span key={"minecount"} className={mineCount < 0 ? "text-red-500" : ""}>{mineCount.toString().padStart(3, "0")}</span>
+  <span key={"minecount"} className={mineCount < 0 ? "text-red-500" : ""}>
+    {mineCount.toString().padStart(3, "0")}
+  </span>
 ));
 
 MineCountView.displayName = "MineCountView";
@@ -95,11 +97,11 @@ const TimerView = React.memo(
         setTimeCount((t) => t + 1);
       }, 1000);
 
-      return () => { };
+      return () => {};
     }, [setTimeCount, gameStatus]);
 
     return <span key={"timer"}>{timeCount.toString().padStart(3, "0")}</span>;
-  }
+  },
   // (_, { gameStatus: nextGameStatus }) => {
   //   if (
   //     nextGameStatus === GameStatus.Failed ||
@@ -115,7 +117,7 @@ TimerView.displayName = "TimerView";
 
 export default function MineSweeperView() {
   const [mineSweeper, setMineSweeper] = useState(
-    MineSweepers.default(10, 15, 20)
+    MineSweepers.default(10, 15, 20),
   );
   const blockRef = useRef<MaybeMine>(null) as MutableRefObject<MaybeMine>;
 
@@ -126,7 +128,7 @@ export default function MineSweeperView() {
       if (mineSweeper.isFailed()) return;
       setGameStatus(GameStatus.MouseDown);
     },
-    [mineSweeper, setGameStatus]
+    [mineSweeper, setGameStatus],
   );
 
   const handleMouseUp = useCallback(
@@ -157,7 +159,7 @@ export default function MineSweeperView() {
         }
       }
     },
-    [mineSweeper, setGameStatus, setMineSweeper]
+    [mineSweeper, setGameStatus, setMineSweeper],
   );
 
   const restart = useCallback(() => {
@@ -167,11 +169,11 @@ export default function MineSweeperView() {
 
   const Emoji = useMemo(
     () => (
-      <div className="cursor-pointer" onClick={restart}>
+      <div className='cursor-pointer' onClick={restart}>
         {gameStatus}
       </div>
     ),
-    [gameStatus, restart]
+    [gameStatus, restart],
   );
 
   useEffect(() => {
@@ -182,13 +184,10 @@ export default function MineSweeperView() {
   }, []);
 
   return (
-    <div
-      key="mineSweeper"
-      className="game-container flex flex-col"
-    >
+    <div key='mineSweeper' className='game-container flex flex-col'>
       <div
-        key="mineSweeper-header"
-        className="mineSweeper-header flex justify-between"
+        key='mineSweeper-header'
+        className='mineSweeper-header flex justify-between'
       >
         <MineCountView mineCount={mineSweeper.markedMineCount()} />
         {Emoji}
@@ -196,10 +195,10 @@ export default function MineSweeperView() {
       </div>
 
       <div
-        key="mineSweeper-container"
+        key='mineSweeper-container'
         onMouseDown={handleMouseDown}
         onMouseUp={handleMouseUp}
-        className="mineSweeper-container custom-scheme cursor-pointer"
+        className='mineSweeper-container custom-scheme cursor-pointer'
       >
         {mineSweeper.iterPosition().map((maybeMine) => (
           <MemoBlockView
