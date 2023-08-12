@@ -121,3 +121,7 @@ body::-webkit-scrollbar {
 .markdown-body pre {
   padding: 0 !important;
 }
+
+.markdown-body svg {
+  width: 100%;
+}
