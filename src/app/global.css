@@ -5,11 +5,11 @@
 :root {
   color-scheme: light dark;
 
-  --dark-scheme-bg-color: rgb(24, 24, 24);
+  --dark-scheme-bg-color: rgba(24, 24, 24, 0.4);
   --dark-scheme-comp-color: rgb(34, 34, 34);
   --dark-scheme-text-color: whitesmoke;
 
-  --light-scheme-bg-color: rgb(236, 231, 231);
+  --light-scheme-bg-color: rgba(236, 231, 231, 0.4);
   --light-scheme-comp-color: whitesmoke;
   --light-scheme-text-color: rgb(22, 22, 22);
 }
@@ -32,6 +32,8 @@ button:focus {
 
 body {
   background-color: var(--dark-scheme-bg-color);
+  min-width: 100vw;
+  min-height: 100vh;
 }
 
 body::-webkit-scrollbar {
