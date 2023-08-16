@@ -37,3 +37,12 @@ export function isMobile() {
     );
   return flag;
 }
+
+export async function getData(currentPage: number, perPage: number) {
+  const res = await fetch(
+    `http://localhost:4000/canvas/api?currentPage=${currentPage}&perPage=${perPage}`,
+  );
+
+  const json = await res.json();
+  return json;
+}

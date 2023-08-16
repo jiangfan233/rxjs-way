@@ -1,12 +1,15 @@
+import { SphereOptions } from "@/app/canvas/types";
 import {
   ActionManager,
   Color3,
   Color4,
   CreateSphere,
   Engine,
+  ISimplificationSettings,
   IncrementValueAction,
   Mesh,
   PBRMaterial,
+  SimplificationType,
   StandardMaterial,
 } from "@babylonjs/core";
 import { FreeCamera } from "@babylonjs/core/Cameras/freeCamera";
@@ -27,6 +30,7 @@ type PlanetViewInfo = PlanetInfo & {
   distanceRadio: number;
 };
 
+// fake data
 const data: PlanetInfo[] = [
   // 太阳
   {
@@ -105,9 +109,24 @@ const data: PlanetInfo[] = [
     color: Color3.Blue(),
     distance: 45.87,
     // orbitalVelocity: 170503,
-    angularVelocity: 0.006,
+    angularVelocity: 0.008,
   },
 ];
+
+/**
+ * 行星x轴偏移量
+ */
+const OffsetX = 200;
+
+export const getSimplifySettings = (
+  horizon: number,
+): Array<ISimplificationSettings> =>
+  Array.from({ length: 9 }).map((_, index, arr) => {
+    return {
+      quality: (index + 1) * 0.1,
+      distance: horizon * (arr.length - index) * 0.1,
+    };
+  });
 
 function handleData(): PlanetViewInfo[] {
   const maxDiameter = Math.max(...data.map((item) => item.diameter));
@@ -133,17 +152,18 @@ export class CanvasUtil {
       document.documentElement.clientWidth,
       document.documentElement.clientHeight,
     );
-    this.scene.clearColor = Color4.FromArray([0, 0, 0, 0]);
-    this.freeCamera = this.createFreeCamera(Vector3.FromArray([0, 300, -400]));
+
+    this.freeCamera = this.createFreeCamera(
+      Vector3.FromArray([-300, 300, -400]),
+    );
 
     this.hemiLight = new HemisphericLight(
       "hemi",
-      Vector3.FromArray([0, 1, 0]),
+      Vector3.FromArray([-1000, -1000, -1000]),
       this.scene,
     );
     this.hemiLight.intensity = 0.7;
 
-    
     this.planetViewInfo.map(
       (
         { name, diameterRadio, distanceRadio, angularVelocity, color },
@@ -151,7 +171,7 @@ export class CanvasUtil {
       ) => {
         const planet = this.createPlanet(
           name,
-          diameterRadio * length * 0.02,
+          diameterRadio * length * 0.05,
           ((distanceRadio * length) / 2) * 0.8,
           color,
         );
@@ -173,6 +193,9 @@ export class CanvasUtil {
     const camera = new FreeCamera("camera1", pos, this.scene);
     camera.setTarget(Vector3.Zero());
     camera.attachControl(true);
+    camera.inputs.addKeyboard();
+    camera.inputs.addMouse();
+    camera.inputs.addMouseWheel();
     camera.invertRotation = true;
     return camera;
   }
@@ -194,6 +217,27 @@ export class CanvasUtil {
     return sphere;
   }
 
+  createStar(
+    name: string,
+    options: SphereOptions,
+    color: number[],
+    horizon: number,
+  ): Mesh {
+    let sphere = CreateSphere(name, options, this.scene);
+    const mat = new StandardMaterial(`mat-${name}`, this.scene);
+    mat.diffuseColor = Color3.FromArray(color);
+    mat.emissiveColor = new Color3(0.2, 0.2, 0.2);
+    sphere.material = mat;
+
+    sphere = sphere.simplify(
+      getSimplifySettings(horizon),
+      false,
+      SimplificationType.QUADRATIC,
+    );
+
+    return sphere;
+  }
+
   // 自转
   rotateMesh(mesh: Mesh, axis?: Vector3) {
     this.scene.actionManager = new ActionManager(this.scene);
@@ -209,11 +253,12 @@ export class CanvasUtil {
 
   // 公转
   angularRotate(mesh: Mesh, alpha: number, distance: number) {
+    const delta = alpha * 0.02;
     this.scene.registerBeforeRender(function () {
-      mesh.position.x = distance * Math.cos(alpha);
+      mesh.position.x = OffsetX + distance * Math.cos(alpha);
       mesh.position.y = 0;
       mesh.position.z = distance * Math.sin(alpha);
-      alpha += 0.01;
+      alpha += delta;
     });
   }
 }
