@@ -56,7 +56,7 @@ export async function getData(currentPage: number, perPage: number) {
     ? "http://localhost:3000"
     : "https://rxjs-way.vercel.app";
   const res = await fetch(
-    `/canvas/api?currentPage=${currentPage}&perPage=${perPage}`,
+    `${host}/canvas/api?currentPage=${currentPage}&perPage=${perPage}`,
   );
 
   const json = await res.json();
