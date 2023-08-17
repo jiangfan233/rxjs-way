@@ -19,12 +19,12 @@ export const Layout = ({ childNodes }: { childNodes: React.ReactNode }) => {
       <body className='relative'>
         <a
           href='#'
-          className='peer close top-16 right-4 z-20 h-fit sm:top-0 sm:right-[calc(20vw-2rem)] fixed transition-all duration-300'>
+          className='peer close top-16 right-4 z-20 h-fit sm:top-0 sm:right-[calc(20vw-2rem)] fixed transition-all duration-500'>
           <AiFillCloseCircle size={"1.5rem"} className='rounded-full' />
         </a>
 
         <Image
-          className='fixed invisible sm:visible right-0 bottom-0 h-24 w-fit bg-transparent sm:top-0 peer-[.close]:-z-20 z-0 peer-[.close:focus]:z-10 transition-all duration-300'
+          className='fixed invisible sm:visible right-0 bottom-0 h-24 w-fit bg-transparent sm:top-0 peer-[.close]:-z-20 z-0 peer-[.close:focus]:z-10 transition-all duration-500'
           src={Scrolling || ScrollingBak}
           alt='scrolling'
           width={100}
@@ -32,7 +32,7 @@ export const Layout = ({ childNodes }: { childNodes: React.ReactNode }) => {
         />
 
         <Link
-          className='bottom-[7rem] sm:top-28 h-fit right-8 -z-20 peer-[.close:focus]:z-10 sm:right-8 fixed transition-all duration-300'
+          className='top-4 right-4 sm:top-28 h-fit -z-20 peer-[.close:focus]:z-10 sm:right-8 fixed transition-all duration-500'
           href='/canvas'>
           <AiOutlineArrowRight className='rounded-full' size={"1.5rem"} />
         </Link>
@@ -41,7 +41,6 @@ export const Layout = ({ childNodes }: { childNodes: React.ReactNode }) => {
           className='flex flex-col mx-auto w-full relative 
         peer-[.close:focus]:invisible 
         peer-[.close:focus]:-z-50 
-        peer-[.close:focus]:text-[10px]
         sm:w-[60vw] p-2 gap-2'>
           <div className='h-10 rounded-md'>
             <Header />
