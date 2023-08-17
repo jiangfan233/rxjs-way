@@ -52,8 +52,11 @@ export function isMobile() {
 }
 
 export async function getData(currentPage: number, perPage: number) {
+  const host = isDev()
+    ? "http://localhost:3000"
+    : "https://rxjs-way.vercel.app";
   const res = await fetch(
-    `http://localhost:3000/canvas/api?currentPage=${currentPage}&perPage=${perPage}`,
+    `/canvas/api?currentPage=${currentPage}&perPage=${perPage}`,
   );
 
   const json = await res.json();
