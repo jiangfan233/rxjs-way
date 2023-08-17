@@ -9,6 +9,8 @@ import {
   IncrementValueAction,
   Mesh,
   PBRMaterial,
+  PointerEventTypes,
+  PointerInfo,
   SimplificationType,
   StandardMaterial,
 } from "@babylonjs/core";
@@ -196,6 +198,13 @@ export class CanvasUtil {
     camera.inputs.addKeyboard();
     camera.inputs.addMouse();
     camera.inputs.addMouseWheel();
+    // @ts-ignore
+    camera.inputs.attached.mousewheel.wheelPrecisionX = 15;
+    // @ts-ignore
+    camera.inputs.attached.mousewheel.wheelPrecisionY = 15;
+    // @ts-ignore
+    camera.inputs.attached.mousewheel.wheelPrecisionZ = 15;
+    camera.speed = 15;
     camera.invertRotation = true;
     return camera;
   }
@@ -259,6 +268,17 @@ export class CanvasUtil {
       mesh.position.y = 0;
       mesh.position.z = distance * Math.sin(alpha);
       alpha += delta;
+    });
+  }
+
+  handlePointerEvent() {
+    this.scene.onPointerObservable.add((pointerInfo: PointerInfo, event) => {
+      const { type } = pointerInfo;
+      let isClicking = false;
+      switch (type) {
+        case PointerEventTypes.POINTERDOWN:
+          break;
+      }
     });
   }
 }

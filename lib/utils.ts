@@ -13,6 +13,19 @@ export const debounce = (callback: Function, ms: number, ...args: any[]) => {
   };
 };
 
+export function throttle(cb: Function, delay: number = 500, ...args: any[]) {
+  let id: NodeJS.Timeout | null = null;
+
+  return function fn() {
+    if (id !== null) return;
+    cb.apply(null, args);
+    id = setTimeout(() => {
+      id = null;
+      fn();
+    }, delay);
+  };
+}
+
 export const handleScreenResize = (
   callback: Function,
   ms: number,
@@ -40,9 +53,19 @@ export function isMobile() {
 
 export async function getData(currentPage: number, perPage: number) {
   const res = await fetch(
-    `http://localhost:4000/canvas/api?currentPage=${currentPage}&perPage=${perPage}`,
+    `http://localhost:3000/canvas/api?currentPage=${currentPage}&perPage=${perPage}`,
   );
 
   const json = await res.json();
   return json;
+}
+
+export function callWhenIdle(cb: Function, delay = 200) {
+  return requestAnimationFrame(() => {
+    cb.call(null);
+    let id = setTimeout(() => {
+      callWhenIdle(cb);
+      clearTimeout(id);
+    }, delay);
+  });
 }

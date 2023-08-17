@@ -33,7 +33,7 @@ const GameView = React.memo(
     useEffect(() => {
       const isGame = ["mineSweepers", "snake", "tetris"].includes(params.id);
       if (!isGame) router.push("/404");
-    }, [params.id]);
+    }, [params.id, router]);
 
     return (
       <div key={params.id} className='flex items-center justify-center'>

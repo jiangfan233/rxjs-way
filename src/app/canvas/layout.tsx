@@ -1,24 +1,31 @@
 import "@/app/global.css";
 import { Canvas } from "@/components/canvas";
-import { getData } from "@lib/utils";
+import Image from "next/image";
+import Scrolling from "@public/scroll-2.webp";
+import ScrollingBak from "@public/scroll.png";
 
 export const metadata = {
-  title: "Fake Universe",
+  title: "Stars",
   description: "have fun~",
 };
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
 
-  const res = await getData(1, 100);
-
   return (
     <html lang='en'>
       <body>
-        <Canvas data={res.data}></Canvas>
+        <Canvas></Canvas>
+        <Image
+          className='fixed invisible sm:visible right-0 bottom-0 h-24 w-fit bg-transparent sm:top-0 peer-[.close]:-z-20 z-0 peer-[.close:focus]:z-10 transition-all duration-300'
+          src={Scrolling || ScrollingBak}
+          alt='scrolling'
+          width={100}
+          height={100}
+        />
       </body>
     </html>
   );
