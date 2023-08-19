@@ -1,7 +1,7 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef } from "react";
-import { Engine, Mesh, Scene, Vector3 } from "@babylonjs/core";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { Engine, InstancedMesh, Scene, Vector3 } from "@babylonjs/core";
 import { CanvasUtil } from "@lib/canvas";
 import { PlanetItemType } from "@/app/canvas/types";
 import { callWhenIdle, debounce, getData, throttle } from "@lib/utils";
@@ -17,7 +17,7 @@ const Length = Math.sqrt(width * width + height * height + depth * depth);
 /**
  * 视距： 这里默认能看到立方体对角线长度的75%
  */
-const Horizon = Length * 0.75;
+const Horizon = Length;
 /**
  * sphere最大直径
  */
@@ -35,9 +35,10 @@ export const Canvas = () => {
     null,
   );
   const canvasUtilRef = useRef<CanvasUtil | null>(null);
-  const allStarsInfoRef = useRef<Mesh[]>([]);
+  const allStarsInfoRef = useRef<InstancedMesh[]>([]);
   const fetchedStarsRef = useRef<PlanetItemType[]>([]);
   const pageInfoRef = useRef({ currentPage: 2, perPage: 100 });
+  const [error, setError] = useState("");
 
   const handleResize = useCallback(
     () => () => sceneAndEngineRef.current?.engine.resize(),
@@ -56,7 +57,6 @@ export const Canvas = () => {
             segments: Segments,
           },
           color,
-          Horizon,
         );
         const camera = canvasUtilRef.current!.freeCamera;
         const cameraPos = camera!.position;
@@ -109,12 +109,16 @@ export const Canvas = () => {
 
   // init engine, init scene
   useEffect(() => {
-    const engine = new Engine(canvasRef.current, true, undefined, true);
-    const scene = new Scene(engine);
-    sceneAndEngineRef.current = { engine, scene };
-    canvasUtilRef.current = new CanvasUtil(scene, engine);
-    canvasRef.current?.focus();
-  }, []);
+    try {
+      const engine = new Engine(canvasRef.current, true, undefined, true);
+      const scene = new Scene(engine);
+      sceneAndEngineRef.current = { engine, scene };
+      canvasUtilRef.current = new CanvasUtil(scene, engine, Horizon);
+      canvasRef.current?.focus();
+    } catch (e) {
+      setError("Your browser does not support WebGL, I'm sorry for that.");
+    }
+  }, [setError]);
 
   // resize
   useEffect(() => {
@@ -140,14 +144,20 @@ export const Canvas = () => {
   }, [addStar]);
 
   return (
-    <canvas
-      onPointerDown={canvasPointerEventHandler.handlePointerDown}
-      onPointerMove={canvasPointerEventHandler.handlePointerMove}
-      onPointerUp={canvasPointerEventHandler.handlePointerUp}
-      ref={canvasRef}
-      className=' cursor-grab w-[100vw] h-full absolute top-0 left-0 z-0 peer-[.close]:-z-10  peer-[.close:focus]:z-0'>
-      It seems that your browser does not support canvas. What a pity :(
-    </canvas>
+    <>
+      {error ? (
+        error
+      ) : (
+        <canvas
+          onPointerDown={canvasPointerEventHandler.handlePointerDown}
+          onPointerMove={canvasPointerEventHandler.handlePointerMove}
+          onPointerUp={canvasPointerEventHandler.handlePointerUp}
+          ref={canvasRef}
+          className=' cursor-grab w-[100vw] h-full absolute top-0 left-0 z-0 peer-[.close]:-z-10  peer-[.close:focus]:z-0'>
+          It seems that your browser does not support canvas. What a pity :(
+        </canvas>
+      )}
+    </>
   );
 };
 

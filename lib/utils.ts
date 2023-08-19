@@ -63,7 +63,7 @@ export async function getData(currentPage: number, perPage: number) {
   return json;
 }
 
-export function callWhenIdle(cb: Function, delay = 200) {
+export function callWhenIdle(cb: Function, delay = 100) {
   return requestAnimationFrame(() => {
     cb.call(null);
     let id = setTimeout(() => {

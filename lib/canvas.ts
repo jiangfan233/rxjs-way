@@ -7,6 +7,7 @@ import {
   Engine,
   ISimplificationSettings,
   IncrementValueAction,
+  InstancedMesh,
   Mesh,
   PBRMaterial,
   PointerEventTypes,
@@ -144,10 +145,12 @@ export class CanvasUtil {
   freeCamera: null | FreeCamera;
   hemiLight: HemisphericLight | null = null;
   planetViewInfo: null | PlanetViewInfo[] = null;
+  SimplifySettings: ISimplificationSettings[] | null = null;
 
   constructor(
     private scene: Scene,
     private engine: Engine,
+    private horizon: number,
   ) {
     this.planetViewInfo = handleData();
     const length = Math.min(
@@ -157,6 +160,7 @@ export class CanvasUtil {
 
     this.freeCamera = this.createFreeCamera(
       Vector3.FromArray([-300, 300, -400]),
+      this.horizon,
     );
 
     this.hemiLight = new HemisphericLight(
@@ -185,16 +189,18 @@ export class CanvasUtil {
       },
     );
 
+    this.SimplifySettings = getSimplifySettings(this.horizon);
+
     // Render every frame
     engine.runRenderLoop(() => {
       scene.render();
     });
   }
 
-  createFreeCamera(pos: Vector3) {
+  createFreeCamera(pos: Vector3, horizon: number) {
     const camera = new FreeCamera("camera1", pos, this.scene);
     camera.setTarget(Vector3.Zero());
-    camera.attachControl(true);
+    camera.attachControl(false);
     camera.inputs.addKeyboard();
     camera.inputs.addMouse();
     camera.inputs.addMouseWheel();
@@ -206,6 +212,7 @@ export class CanvasUtil {
     camera.inputs.attached.mousewheel.wheelPrecisionZ = 15;
     camera.speed = 15;
     camera.invertRotation = true;
+    camera.maxZ = horizon;
     return camera;
   }
 
@@ -230,8 +237,8 @@ export class CanvasUtil {
     name: string,
     options: SphereOptions,
     color: number[],
-    horizon: number,
-  ): Mesh {
+    horizon: number = this.horizon,
+  ): InstancedMesh {
     let sphere = CreateSphere(name, options, this.scene);
     const mat = new StandardMaterial(`mat-${name}`, this.scene);
     mat.diffuseColor = Color3.FromArray(color);
@@ -239,12 +246,15 @@ export class CanvasUtil {
     sphere.material = mat;
 
     sphere = sphere.simplify(
-      getSimplifySettings(horizon),
+      this.SimplifySettings!,
       false,
       SimplificationType.QUADRATIC,
     );
 
-    return sphere;
+    sphere.setEnabled(false);
+    const instance = sphere.createInstance(name);
+
+    return instance;
   }
 
   // 自转
