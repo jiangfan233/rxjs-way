@@ -1,0 +1,8 @@
+node_modules
+.github
+docs
+.git
+.next
+!.next/standalone
+!.next/static
+!.next/public

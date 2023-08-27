@@ -71,19 +71,18 @@ export const Canvas = () => {
     }
   }, []);
 
+  const getStars = useCallback(async () => {
+    const { currentPage, perPage } = pageInfoRef.current;
+    if (canvasRef.current) canvasRef.current!.style.cursor = "progress";
+    const { data } = await getData(currentPage, perPage);
+    fetchedStarsRef.current.push(...data);
+    addStar();
+    pageInfoRef.current.currentPage += 1;
+    if (canvasRef.current) canvasRef.current!.style.cursor = "grab";
+  }, [addStar]);
+
   // 摄像机移动时需要加载更多数据
-  const handleGoForward = useCallback(
-    debounce(async () => {
-      const { currentPage, perPage } = pageInfoRef.current;
-      if (canvasRef.current) canvasRef.current!.style.cursor = "progress";
-      const { data } = await getData(currentPage, perPage);
-      fetchedStarsRef.current.push(...data);
-      addStar();
-      pageInfoRef.current.currentPage += 1;
-      if (canvasRef.current) canvasRef.current!.style.cursor = "grab";
-    }, 500),
-    [addStar],
-  );
+  const handleGoForward = useMemo(() => debounce(getStars, 500), [getStars]);
 
   const canvasPointerEventHandler = useMemo(() => {
     let isClicking = false;

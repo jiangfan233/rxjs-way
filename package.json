@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "local-build": "npx --no-install next build",
-    "prettier": "npx prettier . --write"
+    "prettier": "npx prettier . --write",
+    "build:standalone": "next build && cp -R ./public ./.next/standalone && cp -R ./.next/static ./.next/standalone/.next"
   },
   "dependencies": {
     "@babylonjs/core": "^6.16.0",
