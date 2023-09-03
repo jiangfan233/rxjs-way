@@ -6,7 +6,8 @@ export default async function Page({ params }: { params: { id: string } }) {
   return (
     <div
       className='markdown-body w-[calc(100vw-1rem)] sm:w-[calc(60vw-1rem)]'
-      dangerouslySetInnerHTML={{ __html: res ? (res.content as string) : "" }}
-    ></div>
+      dangerouslySetInnerHTML={{
+        __html: res ? (res.content as string) : "",
+      }}></div>
   );
 }

@@ -1,5 +1,5 @@
 "use client";
 
 export default function Page() {
-  return <>page</>;
+  return <span className=" invisible opacity-0">page</span>;
 }

@@ -5,6 +5,8 @@ import { Engine, InstancedMesh, Scene, Vector3 } from "@babylonjs/core";
 import { CanvasUtil } from "@lib/canvas";
 import { PlanetItemType } from "@/app/canvas/types";
 import { callWhenIdle, debounce, getData, throttle } from "@lib/utils";
+import React from "react";
+import { usePathname } from "next/navigation";
 
 const width = 1920;
 const height = 1080;
@@ -29,7 +31,7 @@ const randomDiameter = () => {
   return Math.random() * (MaxDiameter - MinDiameter) + MinDiameter;
 };
 
-export const Canvas = () => {
+const Canvas = () => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const sceneAndEngineRef = useRef<{ engine: Engine; scene: Scene } | null>(
     null,
@@ -40,6 +42,8 @@ export const Canvas = () => {
   const pageInfoRef = useRef({ currentPage: 2, perPage: 100 });
   const [error, setError] = useState("");
 
+  const path = usePathname();
+
   const handleResize = useCallback(
     () => () => sceneAndEngineRef.current?.engine.resize(),
     [],
@@ -48,7 +52,8 @@ export const Canvas = () => {
   const addStar = useCallback(() => {
     if (typeof window !== "undefined") {
       requestAnimationFrame(() => {
-        if (fetchedStarsRef.current.length <= 0) return;
+        if (fetchedStarsRef.current.length <= 0 || !canvasUtilRef.current)
+          return;
         const { id, color, pos } = fetchedStarsRef.current.shift()!;
         const star = canvasUtilRef.current!.createStar(
           `star-${id}`,
@@ -152,7 +157,12 @@ export const Canvas = () => {
           onPointerMove={canvasPointerEventHandler.handlePointerMove}
           onPointerUp={canvasPointerEventHandler.handlePointerUp}
           ref={canvasRef}
-          className=' cursor-grab w-[100vw] h-full absolute top-0 left-0 z-0 peer-[.close]:-z-10  peer-[.close:focus]:z-0'>
+          className={
+            " cursor-grab w-[100vw] h-[100vh] fixed top-0 left-0 z-0 " +
+            (path === "/canvas"
+              ? "z-0"
+              : "peer-[.close]:-z-10  peer-[.close:focus]:z-0")
+          }>
           It seems that your browser does not support canvas. What a pity :(
         </canvas>
       )}
@@ -160,4 +170,6 @@ export const Canvas = () => {
   );
 };
 
-export default Canvas;
+const MemoCanvas = React.memo(Canvas);
+
+export default MemoCanvas;

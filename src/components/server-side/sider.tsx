@@ -7,9 +7,7 @@ const MenuItem = ({ label, id: path, subMenus }: MenuItemProps) => {
   let href = path.includes("game") ? path : `/post/${path}`;
   return (
     <li className='ml-3 list-inside'>
-      <Link href={href}>
-        {label}
-      </Link>
+      <Link href={href}>{label}</Link>
       {subMenus ? (
         <ol className='list-disc'>
           {subMenus.map(
@@ -60,8 +58,7 @@ export const Sider: React.FC<SiderProps> = () => {
       peer-[.toggle]:max-h-0
       peer-[.toggle:focus]:opacity-100 
       peer-[.toggle:focus]:z-20
-      peer-[.toggle:focus]:max-h-[90vh]'
-    >
+      peer-[.toggle:focus]:max-h-[90vh]'>
       {menuArray.map(({ label, id, subMenus: menuItems }) => (
         <div key={label} className='rounded-md mb-2'>
           <p className=''>{label}</p>
