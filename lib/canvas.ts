@@ -1,4 +1,4 @@
-import { SphereOptions } from "@/app/canvas/types";
+import { PlanetItemType, SphereOptions } from "@/app/canvas/types";
 import {
   ActionManager,
   Color3,
@@ -292,3 +292,24 @@ export class CanvasUtil {
     });
   }
 }
+
+export const getRandom = () => {
+  return (Math.random() <= 0.5 ? -1 : 1) * Math.random();
+};
+
+export const generateFakeData = async (
+  currentPage: number,
+  perPage: number,
+): Promise<PlanetItemType[]> => {
+  return await new Promise((resolve) =>
+    resolve(
+      Array.from({ length: perPage }).map((_, index) => {
+        return {
+          id: (currentPage - 1) * perPage + index,
+          pos: [getRandom(), getRandom(), getRandom()],
+          color: Color3.Random().asArray(),
+        };
+      }),
+    ),
+  );
+};

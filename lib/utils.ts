@@ -1,3 +1,5 @@
+import { generateFakeData } from "./canvas";
+
 export const debounce = (callback: Function, ms: number, ...args: any[]) => {
   callback.apply(null, args);
   let timer: NodeJS.Timeout | undefined = undefined;
@@ -18,10 +20,9 @@ export function throttle(cb: Function, delay: number = 500, ...args: any[]) {
 
   return function fn() {
     if (id !== null) return;
-    cb.apply(null, args);
     id = setTimeout(() => {
+      cb.apply(null, args);
       id = null;
-      fn();
     }, delay);
   };
 }
@@ -52,15 +53,8 @@ export function isMobile() {
 }
 
 export async function getData(currentPage: number, perPage: number) {
-  const host = isDev()
-    ? "http://localhost:3000"
-    : "https://rxjs-way.vercel.app";
-  const res = await fetch(
-    `${host}/canvas/api?currentPage=${currentPage}&perPage=${perPage}`,
-  );
-
-  const json = await res.json();
-  return json;
+  const res = await generateFakeData(currentPage, perPage);
+  return { data: res };
 }
 
 export function callWhenIdle(cb: Function, delay = 100) {

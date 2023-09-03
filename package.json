@@ -3,13 +3,14 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
+    "dev": "cross-env NEXT_PUBLIC_HOST=http://localhost:3000 next dev",
     "start": "next start",
     "lint": "next lint",
-    "local-build": "npx --no-install next build",
     "prettier": "npx prettier . --write",
-    "build:standalone": "next build && cp -R ./public ./.next/standalone && cp -R ./.next/static ./.next/standalone/.next"
+    "build": "cross-env NEXT_PUBLIC_HOST=https://rxjs-way.vercel.app next build",
+    "build:local": "cross-env NEXT_PUBLIC_HOST=http://localhost:3000 next build",
+    "build:docker": "cross-env NEXT_PUBLIC_OUTPUT=standalone NEXT_PUBLIC_HOST=http://127.0.0.1:3000 next build && cp -R ./public ./.next/standalone && cp -R ./.next/static ./.next/standalone/.next",
+    "build:github": "not work cross-env NEXT_PUBLIC_OUTPUT=export next build"
   },
   "dependencies": {
     "@babylonjs/core": "^6.16.0",
@@ -31,6 +32,8 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-icons": "^4.9.0",
+    "sharp": "^0.32.5",
+    "swr": "^2.2.2",
     "tailwindcss": "3.3.2",
     "typescript": "5.0.4"
   },
@@ -41,6 +44,7 @@
     "@types/highlight.js": "^10.1.0",
     "@types/jsdom": "^21.1.1",
     "@types/markdown-it": "^12.2.3",
+    "cross-env": "^7.0.3",
     "eslint-config-prettier": "^9.0.0",
     "prettier": "3.0.1"
   }

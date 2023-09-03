@@ -13,18 +13,24 @@ if (isGithubActions) {
 
 /** @type {import('next').NextConfig} */
 module.exports = (...rest) => {
-  // console.log(rest);
   return {
     // experimental: {
     //   serverActions: true,
     // },
     // distDir: "docs",
     reactStrictMode: false,
-    // output: "standalone",
+    output: process.env.NEXT_PUBLIC_OUTPUT || undefined,
     compiler: {
       removeConsole: isProd,
     },
     cleanDistDir: true,
     swcMinify: true,
+    env: {},
+    webpack: (
+      config,
+      { buildId, dev, isServer, defaultLoaders, nextRuntime, webpack },
+    ) => {
+      return config;
+    },
   };
 };

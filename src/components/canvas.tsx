@@ -4,7 +4,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Engine, InstancedMesh, Scene, Vector3 } from "@babylonjs/core";
 import { CanvasUtil } from "@lib/canvas";
 import { PlanetItemType } from "@/app/canvas/types";
-import { callWhenIdle, debounce, getData, throttle } from "@lib/utils";
+import { callWhenIdle, getData, throttle } from "@lib/utils";
 import React from "react";
 import { usePathname } from "next/navigation";
 
@@ -39,7 +39,7 @@ const Canvas = () => {
   const canvasUtilRef = useRef<CanvasUtil | null>(null);
   const allStarsInfoRef = useRef<InstancedMesh[]>([]);
   const fetchedStarsRef = useRef<PlanetItemType[]>([]);
-  const pageInfoRef = useRef({ currentPage: 2, perPage: 100 });
+  const pageInfoRef = useRef({ currentPage: 2, perPage: 50 });
   const [error, setError] = useState("");
 
   const path = usePathname();
@@ -87,7 +87,7 @@ const Canvas = () => {
   }, [addStar]);
 
   // 摄像机移动时需要加载更多数据
-  const handleGoForward = useMemo(() => debounce(getStars, 500), [getStars]);
+  const handleGoForward = useMemo(() => throttle(getStars, 300), [getStars]);
 
   const canvasPointerEventHandler = useMemo(() => {
     let isClicking = false;
