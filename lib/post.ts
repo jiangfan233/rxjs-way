@@ -48,12 +48,12 @@ export interface FileStructure {
 
 // 递归获取目录解构
 export function getDirStructure(
-  dirPath: string = "posts",
+  dirPath: string = path.join(process.cwd(), "posts"),
   ind: number = 0,
 ): FileStructure[] {
   const res = fs.readdirSync(dirPath).map((file, index) => {
     const filePath = path.join(dirPath, file);
-    const stat = fs.lstatSync(path.join(process.cwd(), filePath));
+    const stat = fs.lstatSync(filePath);
     const fileName = file.slice(0, file.lastIndexOf("."));
     const menu = {
       // id: encodeURIComponent(filePath),
@@ -83,10 +83,7 @@ export interface FileContent {
 
 // 根据文件路径获取并解析markdown文件内容
 export const getFileContent = async (filePath: string) => {
-  const fPath = Buffer.from(
-    path.join(process.cwd(), filePath),
-    "base64url",
-  ).toString("utf8");
+  const fPath = Buffer.from(filePath, "base64url").toString("utf8");
   // const fPath = path.join(process.cwd(), decodeURIComponent(filePath));
   if (!fs.existsSync(fPath)) {
     return null;
