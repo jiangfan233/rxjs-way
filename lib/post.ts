@@ -56,8 +56,8 @@ export function getDirStructure(
     const stat = fs.lstatSync(path.join(process.cwd(), filePath));
     const fileName = file.slice(0, file.lastIndexOf("."));
     const menu = {
-      id: encodeURIComponent(filePath),
-      // id: Buffer.from(filePath, "utf8").toString("base64url"),
+      // id: encodeURIComponent(filePath),
+      id: Buffer.from(filePath, "utf8").toString("base64url"),
       label: stat.isDirectory() ? file : fileName,
       subMenus: stat.isDirectory() ? getDirStructure(filePath) : null,
     };
@@ -83,8 +83,11 @@ export interface FileContent {
 
 // 根据文件路径获取并解析markdown文件内容
 export const getFileContent = async (filePath: string) => {
-  // const fPath = Buffer.from(filePath, "base64url").toString("utf8");
-  const fPath = path.join(process.cwd(), decodeURIComponent(filePath));
+  const fPath = Buffer.from(
+    path.join(process.cwd(), filePath),
+    "base64url",
+  ).toString("utf8");
+  // const fPath = path.join(process.cwd(), decodeURIComponent(filePath));
   if (!fs.existsSync(fPath)) {
     return null;
   }
