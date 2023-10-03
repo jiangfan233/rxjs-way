@@ -20,7 +20,7 @@ export const ContentWithCanvas = ({
     <>
       <a
         href='#'
-        className='peer close top-16 right-4 z-0 h-fit sm:top-0 sm:right-[calc(20vw-2rem)] fixed transition-all bg-transparent text-sky-500 duration-500 ease-in'>
+        className='peer close top-16 right-4 h-fit -z-20 sm:z-10 sm:top-0 sm:right-[calc(20vw-2rem)] fixed transition-all bg-transparent text-sky-500 duration-500 ease-in peer-[.arrow:visible]:invisible'>
         <AiFillCloseCircle className='rounded-full text-2xl' />
       </a>
 
@@ -34,7 +34,7 @@ export const ContentWithCanvas = ({
       />
 
       <Link
-        className='top-4 right-4 sm:top-28 h-fit -z-20 peer-[.close:focus]:z-10 sm:right-8 fixed transition-all duration-500 bg-transparent text-sky-500 ease-in'
+        className='top-24 z-10 arrow right-4 focus:-z-10 sm:top-28 h-fit sm:invisible sm:right-8 sm:peer-[.close:focus]:visible fixed transition-all duration-500 bg-transparent text-sky-500 ease-in'
         href='/canvas'>
         <AiOutlineArrowRight className='rounded-full text-2xl' />
       </Link>
