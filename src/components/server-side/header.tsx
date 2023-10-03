@@ -2,6 +2,7 @@ import React from "react";
 import { AiOutlineGithub, AiOutlineBars } from "react-icons/ai";
 
 import { Sider } from "@/components/server-side/sider";
+import Link from "next/link";
 
 interface HeaderProps {}
 
@@ -16,7 +17,7 @@ export const Header: React.FC<HeaderProps> = ({}) => {
       </div>
 
       <h2 className='font-bold text-xl xs:text-2xl grow text-center'>
-        Programming Journal
+        <Link href='/'>Programming Journal</Link>
       </h2>
 
       <div className='grow-0 flex gap-1 xs:gap-4'>

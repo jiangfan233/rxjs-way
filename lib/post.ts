@@ -48,15 +48,16 @@ export interface FileStructure {
 
 // 递归获取目录解构
 export function getDirStructure(
-  dirPath: string = path.join(process.cwd(), "posts"),
+  dirPath: string = "posts",
   ind: number = 0,
 ): FileStructure[] {
   const res = fs.readdirSync(dirPath).map((file, index) => {
     const filePath = path.join(dirPath, file);
-    const stat = fs.lstatSync(filePath);
+    const stat = fs.lstatSync(path.join(process.cwd(), filePath));
     const fileName = file.slice(0, file.lastIndexOf("."));
     const menu = {
-      id: Buffer.from(filePath, "utf8").toString("base64url"),
+      id: encodeURIComponent(filePath),
+      // id: Buffer.from(filePath, "utf8").toString("base64url"),
       label: stat.isDirectory() ? file : fileName,
       subMenus: stat.isDirectory() ? getDirStructure(filePath) : null,
     };
@@ -82,7 +83,8 @@ export interface FileContent {
 
 // 根据文件路径获取并解析markdown文件内容
 export const getFileContent = async (filePath: string) => {
-  const fPath = Buffer.from(filePath, "base64url").toString("utf8");
+  // const fPath = Buffer.from(filePath, "base64url").toString("utf8");
+  const fPath = path.join(process.cwd(), decodeURIComponent(filePath));
   if (!fs.existsSync(fPath)) {
     return null;
   }
