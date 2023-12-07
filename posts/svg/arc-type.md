@@ -1,6 +1,8 @@
+### svg实现弧形文字
+
 难点在于根据文字长度计算弧形半径和起始点（高中那点数学知识早还给体育老师了 :)）
 
-目前的实现还是有bug的，晚点解决吧；
+目前的实现还是有bug的，晚点解决吧。
 
 ```javascript
 import { createEffect, createSignal } from "solid-js";
