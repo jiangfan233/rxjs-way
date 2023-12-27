@@ -18,7 +18,7 @@ const Main = () => {
   const [key, setKey] = useState(location.key);
   const [isTransition, setIsTransition] = useState(false);
 
-  const urlRef = useRef(location.pathname + location.search);
+  const urlRef = useRef("");
 
   // 使用 useMemo、React.memo 缓存其他组件
   const header = useMemo(() => {
