@@ -47,7 +47,7 @@ function App() {
 
       let end = [P[0] + R * Math.sin(rad), P[1] - R + R * Math.cos(rad)];
 
-      let lenghty = n() >= 50 ? 1 : 0;
+      let lenghty = Math.abs(n())>= 50 ? 1 : 0;
       let direction = n() >= 0 ? 0 : 1;
       textPath.plot(
         `M ${start.join(" ")} A ${R} ${R} 0 ${lenghty} ${direction} ${end.join(
